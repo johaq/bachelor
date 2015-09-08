@@ -22,3 +22,5 @@ for i = 1:noFalseFields
         rndLabels(rndSampleFalse(j)) = rndLabels(rndSampleFalse(j)) * -1; % flip labels
     end
 end
+
+%NEXT TODO: apply measure (distance to descision plane)
