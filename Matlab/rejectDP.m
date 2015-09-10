@@ -1,10 +1,10 @@
-function opt = rejectDP( initLabels, methodLabels, measure)
+function opt = rejectDP( initLabels, methodLabels)%, measure)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 % NEXT TODO: indexshift
 
-noClass = size(unique(initLabels)); % number of classes
+noClass = length(unique(initLabels)); % number of classes
 noTrue = sum(initLabels == methodLabels); % number of correctly classified points
 noFalse = sum(initLabels ~= methodLabels); % number of incorrectly classified points
 
@@ -20,8 +20,8 @@ v = cell(noClass,1); % indicator of correctly and incorrectly classified points 
 for i = 1:noClass
     index{i} = (methodLabels == i); % get index of every point classified in i
     
-    T(i) = sum(init_Labels(index{i}) == methodLabels(index{i})); % number of correctly classified points in i
-    F(i) = sum(init_Labels(index{i}) ~= methodLabels(index{i})); % number of incorrectly classified points in i
+    T(i) = sum(initLabels(index{i}) == methodLabels(index{i})); % number of correctly classified points in i
+    F(i) = sum(initLabels(index{i}) ~= methodLabels(index{i})); % number of incorrectly classified points in i
     N(i) = T(i)+F(i); % number of points in i
     
     l_init = initLabels(index{i}); % get original labels of points in i
@@ -32,33 +32,41 @@ for i = 1:noClass
     
     v_i_help = [0 v_i];
     v_i = [v_i 0];
-    theta{i} = [find(v_i==1 & v_i_help == -1)]; % possible thresholds where values in v_i change from -1 to 1
+    theta{i} = [0 find(v_i==1 & v_i_help == -1)]; % possible thresholds where values in v_i change from -1 to 1
 end
 
 % compute number of false and true rejects for each found threshold
-trueRejects = cell(noClass,1);
+trueRejects = cell(noClass+1,1);
+trueRejects{1} = [0 0];
 falseRejects = trueRejects;
-for i = 1:noClass
-    for j = 1:size(theta{i})
-        trueRejects{i} = [trueRejects{i} sum(v{i}(1:j) == -1)]; % add up number of true rejects represented by -1
-        falseRejects{i} = [falseRejects{i} sum(v{i}(1:j) == 1)-1]; % add up number of false rejects rpresented by 1; one less because threshold itself should not be counted
+for i = 2:noClass+1
+    for j = 1:length(theta{i-1})
+        trueRejects{i} = [trueRejects{i} sum(v{i-1}(1:theta{i-1}(j)) == -1)]; % add up number of true rejects represented by -1
+        falseRejects{i} = [falseRejects{i} sum(v{i-1}(1:theta{i-1}(j)) == 1)-1]; % add up number of false rejects rpresented by 1; one less because threshold itself should not be counted
     end
 end
 
 % compute opt according to bellmann-equation
-opt = zeros(noTrue,noClass)
+opt = zeros(noTrue+1,noClass+1);
 
-h = sum(cellfun(@(first) first(1),trueRejects)); % get number of true rejects if first threshold is choosen in each class
-for j=1:noClass
+h = sum(cellfun(@(first) first(2),trueRejects)); % get number of true rejects if first threshold is choosen in each class
+for j=1:noClass+1
     opt(1,j) = h;
 end
-for n=1:noTrue
+for n=1:noTrue+1
     opt(n,1) = h;
 end
 
-for n = 1:noTrue
-    for j = 1:noClass
-        for i = 1:min(n,falseRejects{j}(i))
+for n = 2:noTrue+1
+    for j = 2:noClass+1
+        opt(n,j) = opt(n,j-1);
+        for i = 2:find(falseRejects{j}<n,1,'last') % look at all thresholds which result in a maximum of n false rejects
+            newN = n-falseRejects{j}(i);
+            gain = trueRejects{j}(i)-trueRejects{j}(2);
+            h = opt (newN,j-1) + gain;
+            if (h > opt(n,j))
+                opt(n,j) = h;
+            end
         end
     end
 end
