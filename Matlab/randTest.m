@@ -4,10 +4,11 @@
 
 rndDeviation = 1;
 rndMean = 0;
-noPoints = 1000;
+noPoints = 100;
 rndSample = rndDeviation.*randn(noPoints,1) + rndMean; 
 rndSample = sort(rndSample);
 rndLabels = sign(rndSample);
+rndInitLabels = rndLabels;
 
 % add falsely classified points
 noFalseFields = 5; % number of distributions used to insert possible true rejects
@@ -23,4 +24,16 @@ for i = 1:noFalseFields
     end
 end
 
-%NEXT TODO: apply measure (distance to descision plane)
+rndLabels(rndLabels == 1) = 2;
+rndLabels(rndLabels == -1) = 1;
+rndInitLabels(rndInitLabels == 1) = 2;
+rndInitLabels(rndInitLabels == -1) = 1;
+
+%apply measure (distance to descision plane)
+rndSample = abs(rndSample);
+[rndSample index] = sort(rndSample);
+rndLabels = rndLabels(index);
+rndInitLabels = rndInitLabels(index);
+
+%test
+opt = rejectDP(rndInitLabels,rndLabels)
