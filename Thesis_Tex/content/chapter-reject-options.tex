@@ -4,15 +4,34 @@
 \label{sec:options}
 
 \section{Two Classes}
-To make our way towards optimal rejects for multiclass classification, we start of small by looking at a general two class classifier $f$ that divides the space via a decision plane (hyperplane?). 
-$$f: \mathbb{R}^n \to \{1,2\}$$
-Let $r_1$ and $r_2$ be measures of confidence that a point is part of the respective class. If $r_i(\bar{x})$ is large it means that $\bar{x}$ is likely in class $i$.  
+To make our way towards optimal rejects for multi class classification, we start of small by looking at a general two class classifier $f$ that divides the space via a decision boundary. 
+$$ f: \mathbb{R}^n \to \{1,2\} $$
+Let $r$ be a measure of confidence that a point is part of its respective class, e.g. distance to the decision boundary. If $r(\bar{x})$ is large it means that $\bar{x}$ is likely in the class it was assigned to.
 
-\subsection{Strategy}
+\subsection{Reject Strategy}
+We look for a threshold $\Theta$ that defines for a given point $\bar{x}$ whether it is rejected or not:
+$$ r(\bar{x}) < \Theta : \bar{x} \  rejected $$
 
 \subsection{Optimal $\Theta$}
+In order to find an optimal threshold we need to decide how to evaluate it. Optimally only wrongly classified data points are rejected (now referred to as true rejects). But generally there will be rejected although correctly classified points (false rejects). 
+A given labeled (by $y$) data set $X$ is divided into the two sets $L$ and $E$ by applying $f$ as a classifier with:
+\begin{align} 
+L&=\{\forall \bar{x} \in X \ | \ f(\bar{x}) = y(\bar{x})\} : correctly \ classified \ points \\
+E&=\{\forall \bar{x} \in X \ | \ f(\bar{x}) \neq y(\bar{x})\} : incorrectly \ classified \ points \end{align}
+And by applying our reject strategy with the threshold $\Theta$, $X$ is divided into $A$ and $R$ with:
+\begin{align} 
+A_\Theta&=\{\forall \bar{x} \in X \ | \ r(\bar{x}) \geq \Theta \} : accepted \ points \\
+R_\Theta&=\{\forall \bar{x} \in X \ | \ r(\bar{x}) < \Theta\} : rejected \ points 
+\end{align}
+The set $T$ contains all true rejects and $F$ all false rejects.
+\begin{align} 
+T_\Theta &= R \cap E \\ 
+F_\theta &= R \cap L
+\end{align}
+Naturally we want $|T_\Theta|$ to be large and $|F_\Theta|$ to be small. Since these two goals often contradict each other, e.g. more true rejects most times bring more false ones (TODO: graph), there is no single optimal choice of $\Theta$ in general. Still there is a set of values that we consider optimal. As shown above each $\Theta$ corresponds to a tuple $(|T_\Theta|,|F_\Theta|)$. $\Theta$ is optimal if
+$$ \nexists \Theta^{'} : |F_\Theta^{'}|\leq|F_\Theta|, |T_\Theta^{'}|\geq|T_\Theta| $$ and at least one term is unequal. 
 
-\section{Multiclass Classification}
+\section{Multi class Classification}
 
 \subsection{Global Reject}
 
