@@ -29,6 +29,9 @@ rndLabels(rndLabels == -1) = 1;
 rndInitLabels(rndInitLabels == 1) = 2;
 rndInitLabels(rndInitLabels == -1) = 1;
 
+% plot
+
+
 %apply measure (distance to descision plane)
 rndSample = abs(rndSample);
 [rndSample index] = sort(rndSample);

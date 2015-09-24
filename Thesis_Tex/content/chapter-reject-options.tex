@@ -4,6 +4,7 @@
 \label{sec:options}
 
 \section{Two Classes}
+\label{twoclasses}
 To make our way towards optimal rejects for multi class classification, we start of small by looking at a general two class classifier $f$ that divides the space via a decision boundary. 
 $$ f: \mathbb{R}^n \to \{1,2\} $$
 Let $r$ be a measure of confidence that a point is part of its respective class, e.g. distance to the decision boundary. If $r(\bar{x})$ is large it means that $\bar{x}$ is likely in the class it was assigned to.
@@ -26,14 +27,22 @@ R_\Theta&=\{\forall \bar{x} \in X \ | \ r(\bar{x}) < \Theta\} : rejected \ point
 The set $T$ contains all true rejects and $F$ all false rejects.
 \begin{align} 
 T_\Theta &= R \cap E \\ 
-F_\theta &= R \cap L
+F_\Theta &= R \cap L
 \end{align}
 Naturally we want $|T_\Theta|$ to be large and $|F_\Theta|$ to be small. Since these two goals often contradict each other, e.g. more true rejects most times bring more false ones (TODO: graph), there is no single optimal choice of $\Theta$ in general. Still there is a set of values that we consider optimal. As shown above each $\Theta$ corresponds to a tuple $(|T_\Theta|,|F_\Theta|)$. $\Theta$ is optimal if
-$$ \nexists \Theta^{'} : |F_\Theta^{'}|\leq|F_\Theta|, |T_\Theta^{'}|\geq|T_\Theta| $$ and at least one term is unequal. 
+$$ \nexists \Theta^{'} : |F_\Theta^{'}|\leq|F_\Theta|, |T_\Theta^{'}|\geq|T_\Theta| $$ and at least one term is unequal (TODO: wording?). 
+
 
 \section{Multi class Classification}
+Let us now expand the problem to a classifier for multiple classes.
+By using a one vs all strategy, we get $i$ binary classifiers $f_i$ like in chapter \ref{twoclasses} and an according measure of confidence $r_i$. Points are now classified in the class where confidence is maximal among all classes. This gives us a multi class classifier $f$ with
+\begin{align}
+ f: \mathbb{R}^n &\to \{1,...,i\} \\
+   \bar{x} &\mapsto i \ | \ \operatorname*{arg\,max}_i r_i(\bar{x}) 
+\end{align}
 
 \subsection{Global Reject}
+
 
 \subsection{Local Reject}
 
