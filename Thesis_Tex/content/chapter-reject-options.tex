@@ -41,6 +41,35 @@ is a set of possible thresholds. But it would leave us with an infinite search a
 $$ \Theta := \{r(\bar{x}_i) \ | \ \bar{x}_i \in L, \ \bar{x}_{i-1} \in E,\ \bar{x}_{i+1} \in L \} $$
 where $i$ is the index of the points in $X$ when sorted according to $r$. This gives us an easily computed set of thresholds to consider to be optimal. (TODO: example graphic) 
 
+\begin{figure}
+\centering
+\caption{This is an example of classified points sorted by a measure of confidence. You can see that $r(\bar{x}_2)$ and $r(\bar{x}_7)$ are the only sensible thresholds. Choosing $r(\bar{x}_8)$ instead of $r(\bar{x}_7)$ would only add an additional false reject and choosing $r(\bar{x}_6)$ over $r(\bar{x}_7)$ would result in one less true reject.}
+\label{possibleThresholds}
+\begin{tikzpicture}
+	\node[draw=none] at (0.6,1.2) {$r(\bar{x}) \rightarrow$};
+	\draw[style=thick] (0,0) rectangle (10,1);
+	\draw[fill=white] (0.5,0.5) circle (0.35) node {$\bar{x}_1$};
+	\draw[fill=black,text=white] (1.5,0.5) circle (0.35) node {$\bar{x}_2$};
+	\draw[fill=black,text=white] (2.5,0.5) circle (0.35) node {$\bar{x}_3$};
+	\draw[fill=white] (3.5,0.5) circle (0.35) node {$\bar{x}_4$};
+	\draw[fill=white] (4.5,0.5) circle (0.35) node {$\bar{x}_5$};
+	\draw[fill=white] (5.5,0.5) circle (0.35) node {$\bar{x}_6$};
+	\draw[fill=black,text=white] (6.5,0.5) circle (0.35) node {$\bar{x}_7$};
+	\draw[fill=black,text=white] (7.5,0.5) circle (0.35) node {$\bar{x}_8$};
+	\draw[fill=black,text=white] (8.5,0.5) circle (0.35) node {$\bar{x}_9$};
+	\draw[fill=white] (9.5,0.5) circle (0.35) node {$\bar{x}_{10}$};
+	
+	\draw[ultra thick] (1,1) -- (1,0) node [label=below:{$\theta_1$}] {};
+	\draw[ultra thick] (6,1) -- (6,0) node [label=below:{$\theta_2$}] {};;
+	
+	\draw[fill=white] (0.5,-2) circle (0.35);
+		\node[draw=none] at (2.9,-2) {falsely classified points};
+	\draw[fill=black] (0.5,-3) circle (0.35);
+		\node[draw=none] at (3.1,-3) {correctly classified points};
+\end{tikzpicture}
+\end{figure}
+
+
 \section{Multi class Classification}
 Let us now expand the problem to a classifier for $N$ multiple classes.
 By using a one vs all strategy, we get $N$ binary classifiers $f_i$ like in chapter \ref{twoclasses} and an according measure of confidence $r_i$. Points are now classified in the class where confidence is maximal among all classes. This gives us a multi class classifier $f$ with
