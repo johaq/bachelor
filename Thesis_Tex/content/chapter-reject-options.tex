@@ -127,8 +127,17 @@ Each case is explained as follows:
 \item Case \ref{DPcase4}: The chosen threshold $i$ in class $j$ exceeds the allowed amount of false rejects, so the next less strict threshold is considered.
 \item Case \ref{DPcase5}: Here the $i$th threshold in $j$ is a possible threshold but it is not clear whether it is optimal. We consider both cases. If it is not the optimal threshold, we take the next less strict one. If it is optimal, we continue our search in the previous class but with $|F_{\Theta_j(i)}^j|$ less allowed false rejects in consequence to choosing this threshold. The other consequence is that this threshold results in a number of gained true rejects compared to the least strict threshold and this gain is added.
 \end{itemize}
-
+TODO: example (table?) compare to method in previous paper (loop count)
 
 \subsection{Greedy Computation}
+Computation by dynamic programming gives us an optimal local reject option, but it still might be unfeasible in some cases since it scales quadratically (TODO: by what?). Hence we are looking for a greedy approximation with linear running time. 
 
 \subsection{Evaluation}
+In this chapter we evaluate the described methods. We compare dynamic programming against the greedy approximation and against standard reject methods(TODO:wording). The tests will be performed on randomly generated test data and on certain benchmark data sets.
+
+\subsubsection{Evaluation Method}
+TODO: ARC
+
+\subsubsection{DP vs Greedy}
+
+\subsubsection{DP vs Bayes(??)}
