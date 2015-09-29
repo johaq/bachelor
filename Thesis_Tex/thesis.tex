@@ -14,7 +14,7 @@
 	listof=totoc,				% include listof entries in toc
 	titlepage=on,				% own page for each title page
 	captions=tableabove,		% display table captions above the float env
-	draft=false,				% value for draft version
+	draft=true,				% value for draft version
 ]{scrreprt}%
 
 % **************************************************
@@ -49,6 +49,7 @@
 \newcommand{\thesisUniversityCity}{City}
 \newcommand{\thesisUniversityStreetAddress}{Street address}
 \newcommand{\thesisUniversityPostalCode}{Postal Code}
+\newcommand{\svg}[2]{\resizebox{#1}{!}{\includesvg[svgpath="../graphics/"]{../graphics/#2}}}
 
 % **************************************************
 % Load and Configure Packages
@@ -68,9 +69,9 @@
 	bibstyle=alphabetic,%
 ]{cleanthesis}
 \usepackage{amssymb}
-\usepackage{amsmath,bm,svg}
+\usepackage{amsmath,bm,svg,cases}
 
-%\setsvg{inkscape={/usr/bin/inkscape}}
+\setsvg{inkscape={"/usr/bin/inkscape"}}
 
 \usepackage{tikz}
 \usetikzlibrary{arrows,shapes,trees}

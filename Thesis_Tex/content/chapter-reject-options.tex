@@ -9,14 +9,13 @@ To make our way towards optimal rejects for multi class classification, we start
 $$ f: \mathbb{R}^n \to \{1,2\} $$
 Let $r$ be a measure of confidence that a point is part of its respective class, e.g. distance to the decision boundary. If $r(\bar{x})$ is large it means that $\bar{x}$ is likely in the class it was assigned to.
 
-\begin{figure}
+\begin{figure}[!htbp]
 \centering
 \caption{Example of two classes separated by a decision boundary. You can see falsely classified points near the boundary which we would like to reject.}
 \label{decBound}
 \begin{tikzpicture}
-	\node {\includegraphics[scale=0.7]{../graphics/2classDecBoundary.png}};
-	
-	\draw[ultra thick] (0.42,-1.45) -- (0.42,2);
+	\node {\svg{\textwidth}{2classDecBoundary}};
+	\draw[ultra thick] (0.235,-1.25) -- (0.235,1.6);
 \end{tikzpicture}
 \end{figure}
 
@@ -41,8 +40,17 @@ The set $T$ contains all true rejects and $F$ all false rejects.
 T_\theta &= R \cap E \\ 
 F_\theta &= R \cap L
 \end{align}
-Naturally we want $|T_\theta|$ to be large and $|F_\theta|$ to be small. Since these two goals often contradict each other, e.g. more true rejects most times bring more false ones (TODO: graph), there is no single optimal choice of $\theta$ in general. Still there is a set of values that we consider optimal. As shown above each $\theta$ corresponds to a tuple $(|T_\theta|,|F_\theta|)$. $\theta$ is optimal if
+Naturally we want $|T_\theta|$ to be large and $|F_\theta|$ to be small. Since these two goals often contradict each other, e.g. more true rejects most times bring more false ones (see figure \ref{incTaF}), there is no single optimal choice of $\theta$ in general. Still there is a set of values that we consider optimal. As shown above each $\theta$ corresponds to a tuple $(|T_\theta|,|F_\theta|)$. $\theta$ is optimal if
 $$ \nexists \theta^{'} : |F_\theta^{'}|\leq|F_\theta|, |T_\theta^{'}|\geq|T_\theta| $$ and at least one term is unequal (TODO: wording?). 
+
+\begin{figure}[!htbp]
+\centering
+\caption{In this example we can see the corresponding true and false rejects if $r(\bar{x})$ is chosen as a threshold for each $\bar{x} \in X$. $r(\bar{x})$ is increasing from the bottom left corner to the upper right. As we can see, the number of false and true rejects are monotonically increasing with a more strict threshold.}
+\label{incTaF}
+	\begin{tikzpicture}
+		\node {\svg{12cm}{increasingTrueandFalse}};
+	\end{tikzpicture}
+\end{figure}
 
 \subsection{Finding $\theta$}
 \label{findt}
@@ -50,9 +58,18 @@ Now that we know how to evaluate our thresholds we still need to know where to l
 $$ \Theta := \{\theta \in \mathbb{R} \ | \ \theta < \operatorname*{max}_{\bar{x}} r(\bar{x})\}  $$
 is a set of possible thresholds. But it would leave us with an infinite search area (TODO: wording?) but this is easily reduced when recognized that it is unnecessary to consider multiple thresholds in between two points that are next to each other (when sorted according to $r$). So with $\Theta := \{r(\bar{x}) | \forall \bar{x} \in X\}$ we have a feasible set of possible thresholds. It can be refined by looking again at our criteria for an optimal $\theta$. We want $|T_\theta|$, the amount fo true rejects, to be large so we should skip cluster of true rejects since choosing a point in the middle of such cluster can not be better than the point at the end of it. Additionally we want  $|F_\theta|$, the amount fo false rejects, to be small, so we should skip cluster of false rejects since a point in the middle of such cluster can not be better than a point at the beginning of it. In conclusion this means that it is sufficient to consider only points at the beginning of clusters of false rejects, so
 $$ \Theta := \{r(\bar{x}_i) \ | \ \bar{x}_i \in L, \ \bar{x}_{i-1} \in E,\ \bar{x}_{i+1} \in L \} $$
-where $i$ is the index of the points in $X$ when sorted according to $r$. This gives us an easily computed set of thresholds to consider to be optimal. (TODO: example graphic) 
+where $i$ is the index of the points in $X$ when sorted according to $r$. This gives us an easily computed set of thresholds to consider to be optimal (see figures \ref{possibleThresholds} and \ref{paretoFront}.)
 
-\begin{figure}
+\begin{figure}[!htbp]
+\centering
+\caption{This figure shows the thresholds from before (see figure \ref{incTaF}). The green marked points correspond to threshold we consider optimal.}
+\label{paretoFront}
+	\begin{tikzpicture}
+		\node {\svg{12cm}{paretoFront}};
+	\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[!htbp]
 \centering
 \caption{This is an example of classified points sorted by a measure of confidence. You can see that $r(\bar{x}_2)$ and $r(\bar{x}_7)$ are the only sensible thresholds. Choosing $r(\bar{x}_8)$ instead of $r(\bar{x}_7)$ would only add an additional false reject and choosing $r(\bar{x}_6)$ over $r(\bar{x}_7)$ would result in one less true reject.}
 \label{possibleThresholds}
@@ -110,15 +127,19 @@ where $R_{\theta_i}^i$ is the amount of rejected points in class $i$ given the t
 \subsection{Computation by Dynamic Programming}
 TODO: how do it get to the bellman-equation?
 The Bellmann equation to compute $opt$ results in
-\begin{align}
-opt(n,j,i) = \notag \\
-\text{if}& \ n=0 \ &&: \ \sum_{k=1}^{N} |T_{\Theta_k(0)}^k| \label{DPcase1}\\
-\text{if}& \ n>0\text{,}\ j=0 \ &&: \ \sum_{k=1}^{N} |T_{\Theta_k(0)}^k| \label{DPcase2}\\
-\text{if}& \ n>0\text{,}\ j>0\text{,}\ i=0 \ &&: opt(n,j-1,|\Theta_{j-1}|-1) \label{DPcase3}\\
-\text{if}& \ 0<n<|F_{\Theta_j(i)}^j|\text{,}\ j>0 \ &&: opt(n,j,i-1) \label{DPcase4}\\
-\text{if}& \ n \geq |F_{\Theta_j(i)}^j|>0\text{,}\ j>0 \ &&: max\{opt(n,j,i-1), \notag \\
-& && opt(n-|F_{\Theta_j(i)}^j|,j-1,|\Theta_{j-1}|-1)+|F_{\Theta_j(i)}^j|-|F_{\Theta_j(0)}^j|\} \label{DPcase5}
-\end{align}
+
+\begin{numcases}{opt(n,j,i) = }
+\text{if} \ n=0 : &$ \ \sum_{k=1}^{N} \left|T_{\Theta_k(0)}^k\right|$ \label{DPcase1}\\
+\text{if} \ n>0\text{,}\ j=0 : &$ \ \sum_{k=1}^{N} \left|T_{\Theta_k(0)}^k\right|$ \label{DPcase2}\\
+\text{if} \ n>0\text{,}\ j>0\text{,}\ i=0 : &$ opt\left(n,j-1,\left|\Theta_{j-1}\right|-1\right)$ \label{DPcase3}\\
+\text{if} \ 0<n<\left|F_{\Theta_j(i)}^j\right|\text{,}\ j>0 :  &$ opt\left(n,j,i-1\right)$ \label{DPcase4}\\
+\text{if} \ n \geq \left|F_{\Theta_j(i)}^j\right|>0\text{,}\ j>0 :  &$ max\Bigg\{opt\left(n,j,i-1\right),$ \notag \\
+&$\ opt\left(n-\left|F_{\Theta_j(i)}^j\right|,j-1,\left|\Theta_{j-1}\right|-1\right)+$ \notag\\
+&$\ \left|F_{\Theta_j(i)}^j\right|-\left|F_{\Theta_j(0)}^j\right|\Bigg\}$ \label{DPcase5}
+\end{numcases} 
+
+
+
 Each case is explained as follows:
 \begin{itemize}
 \item Case \ref{DPcase1}: $n=0$ means that no false rejects are allowed so the first threshold (index 0) in each class is chosen. The resulting amount of true rejects is summed up over all classes.

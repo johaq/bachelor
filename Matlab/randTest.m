@@ -4,14 +4,14 @@
 
 rndDeviation = 1;
 rndMean = 0;
-noPoints = 100;
+noPoints = 200;
 rndSample = rndDeviation.*randn(noPoints,1) + rndMean; 
 rndSample = sort(rndSample);
 rndLabels = sign(rndSample);
 rndInitLabels = rndLabels;
 
 % add falsely classified points
-noFalseFields = 5; % number of distributions used to insert possible true rejects
+noFalseFields = 10; % number of distributions used to insert possible true rejects
 
 
 for i = 1:noFalseFields
@@ -39,4 +39,6 @@ rndLabels = rndLabels(index);
 rndInitLabels = rndInitLabels(index);
 
 %test
-opt = rejectDP(rndInitLabels,rndLabels)
+%optDP = rejectDP(rndInitLabels,rndLabels)
+%optBF = rejectBruteForce(rndInitLabels,rndLabels)
+optDP = rejectDPgraphic(rndInitLabels,rndLabels)
