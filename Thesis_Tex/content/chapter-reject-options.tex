@@ -109,7 +109,17 @@ By using a one vs all strategy, we get $N$ binary classifiers $f_i$ like in chap
 \subsection{Global Reject}
 To adapt our reject strategy from before, we search for a threshold $\theta$ and reject according to our measures of confidence:
 $$ \operatorname*{max}_i r_i(\bar{x}) < \theta \ : \ \bar{x} \ \text{rejected}  $$
-We look again to choose $\theta$ so that it meets our requirements for an optimal threshold (see chapter \ref{optimalt}). This strategy comes with the problem that it relies on all measures $r_i$ to be scaled the same way (TODO: exmaple?). While there might be a workaround for this a global reject is still imprecise when the internal structures of the classes differ a lot. A reasonable threshold for a class with most points and also most classification errors near the decision plane is probably not well suited for a class with a wider (TODO: wording?) set of data points (TODO: example). This leads to the idea of having individual thresholds for each class.
+We look again to choose $\theta$ so that it meets our requirements for an optimal threshold (see chapter \ref{optimalt}). This strategy comes with the problem that it relies on all measures $r_i$ to be scaled the same way (TODO: exmaple?). While there might be a workaround for this a global reject is still imprecise when the internal structures of the classes differ a lot(see figure \ref{classStructure}). A reasonable threshold for a class with most points and also most classification errors near the decision plane is probably not well suited for a class with a wider (TODO: wording?) set of data points. This leads to the idea of having individual thresholds for each class.
+
+\begin{figure}[!htbp]
+\centering
+\caption{In this two-class classification example one class (blue circles) has few errors near the decision boundary and the other (red triangles) multiple farer away. A global reject optimal for the first class would result in a lot of unrejected errors in class 2. Conversely an optimal global reject for class 2 would result in many false rejects in class 1.}
+\label{classStructure}
+\begin{tikzpicture}
+	\node {\svg{\textwidth}{classStructure}};
+	\draw[ultra thick] (-0.5,-0.9) -- (-0.5,1.3);
+\end{tikzpicture}
+\end{figure}
 
 \subsection{Local Reject}
 To account for differences in class structure each one now has a local reject threshold $\theta_i$. A point is rejected if
@@ -122,13 +132,54 @@ For each threshold $\theta_i$ the same criteria apply to determine if it is opti
 T_{\theta_i}^i &= R_{\theta_i}^i \cap E_i \\ 
 F_{\theta_i}^i &= R_{\theta_i}^i \cap L_i
 \end{align}
-where $R_{\theta_i}^i$ is the amount of rejected points in class $i$ given the threshold $\theta_i$, $E_i$ the amount of falsely classified points in class $i$ and $L_i$ the amount of correctly classified points in $i$. As before we consider a certain set $\Theta_i$ of possible thresholds for each class (see chapter \ref{findt}). We conclude that the threshold vector is $\bar{\theta}$ is optimal if each $\theta_i$ is optimal. To now find the optimal local reject vector $\bar{\theta}$ we need to consider every combination of thresholds in the sets $\Theta_i$ of possible optimal thresholds. Brute forcing this would mean that finding $\bar{\theta}$ has an exponential complexity. However the problem is equivalent to it a multiple choice knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to costs, and true rejects correspond to their value. (TODO: link)
+where $R_{\theta_i}^i$ is the amount of rejected points in class $i$ given the threshold $\theta_i$, $E_i$ the amount of falsely classified points in class $i$ and $L_i$ the amount of correctly classified points in $i$. As before we consider a certain set $\Theta_i$ of possible thresholds for each class (see chapter \ref{findt}). We conclude that the threshold vector $\bar{\theta}=(\theta_1,...,\theta_N)$ is optimal if each $\theta_i$ is optimal. 
+
+
+%To now find the optimal local reject vector $\bar{\theta}$ we need to consider every combination of thresholds %in the sets $\Theta_i$ of possible optimal thresholds. Brute forcing this would mean that finding %$\bar{\theta}$ has an exponential complexity. However the problem is equivalent to it a multiple choice %knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to %costs, and true rejects correspond to their value. (TODO: link)
+
+\subsection{Computation by Brute Force}
+To now find the optimal local reject vectors $\bar{\theta}$ with a brute force approach we need to consider every combination of thresholds in the sets $\Theta_i$. Let
+$$ \mathbb{P} = \left\{\bar{\theta} = \left(\theta_1,...,\theta_N\right) \in \Theta_1 \times ... \times \Theta_N \right\} $$
+be the set of all permutations of the sets of optimal thresholds from each class. Algorithm \ref{bruteForce} describes in pseudo code how to find all $\bar{\theta}$.
+
+\begin{algorithm}[!htbp]
+ \KwData{$\mathbb{P}$}
+ \KwResult{set of optimal local reject vectors $\Theta_{opt}$}
+ initialization\;
+ array $opt$ where $opt(n)$ is the maximum number of true rejects with n false ones \;
+ array $theta$ where $theta(n)$ is the optimal threshold vector with n false rejects \; 
+ \ForEach{$\bar{\theta} \in \mathbb{P}$}{
+ 	$F :=$ amount of false rejects for $\bar{\theta}$ \;
+ 	$T :=$ amount of true rejects for $\bar{\theta}$ \;
+ 	\If{$opt(F)<T$}{
+ 		$opt(F):=T$ \;
+ 		$theta(F)=\bar{\theta}$ \;
+ 	}
+ }
+ \KwRet{theta}
+ \BlankLine \BlankLine
+ \caption{Computing optimal local reject options by brute force.}
+ \label{bruteForce}
+\end{algorithm}
 
 \subsection{Computation by Dynamic Programming}
-TODO: how do it get to the bellman-equation?
-The Bellmann equation to compute $opt$ results in
+Computation by brute force scales exponentially with the number of classes and is therefore not a feasible solution for large data sets with lots of clusters. But our problem is equivalent to a multiple choice knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to costs, and true rejects correspond to their value (TODO:link). This allows us a faster solution that still maintains optimal results.
+Let
 
-\begin{numcases}{opt(n,j,i) = }
+$$
+opt(n,j,i) = \max_{\bar{\theta}}
+\begin{Bmatrix}
+	 & \left|F_{\bar{\theta}}\right| =  & n \\
+  	\left|T_{\bar{\theta}}\right| \ s.t. & \theta_k \in & \Theta_k \forall k < j \\
+  	 & \theta_j \in & \left\{\theta_j(0),...,\theta_j(i)\right\} \\
+  	 & \theta_k \in & \theta_k(0) \forall k > j
+\end{Bmatrix}
+$$
+(TODO: define $	\left|T_{\bar{\theta}}\right|$ and $\left|F_{\bar{\theta}}\right|$ ???) \\
+be the maximum number of true rejects with $n$ false rejects while considering all thresholds in classes before class $j$ and the first $i$ thresholds in class $j$. All $\bar{\theta}$ corresponding to $opt(n,N,\left|\Theta_N\right|-1) \forall n<\left|L\right|$ fulfill our criteria for an optimal threshold vector. \\
+This results in the Bellmann equation \ref{DP} to efficiently compute $opt$:
+
+\begin{subnumcases}{opt(n,j,i) = \label{DP}}
 \text{if} \ n=0 : &$ \ \sum_{k=1}^{N} \left|T_{\Theta_k(0)}^k\right|$ \label{DPcase1}\\
 \text{if} \ n>0\text{,}\ j=0 : &$ \ \sum_{k=1}^{N} \left|T_{\Theta_k(0)}^k\right|$ \label{DPcase2}\\
 \text{if} \ n>0\text{,}\ j>0\text{,}\ i=0 : &$ opt\left(n,j-1,\left|\Theta_{j-1}\right|-1\right)$ \label{DPcase3}\\
@@ -136,7 +187,7 @@ The Bellmann equation to compute $opt$ results in
 \text{if} \ n \geq \left|F_{\Theta_j(i)}^j\right|>0\text{,}\ j>0 :  &$ max\Bigg\{opt\left(n,j,i-1\right),$ \notag \\
 &$\ opt\left(n-\left|F_{\Theta_j(i)}^j\right|,j-1,\left|\Theta_{j-1}\right|-1\right)+$ \notag\\
 &$\ \left|F_{\Theta_j(i)}^j\right|-\left|F_{\Theta_j(0)}^j\right|\Bigg\}$ \label{DPcase5}
-\end{numcases} 
+\end{subnumcases} 
 
 
 
@@ -151,7 +202,7 @@ Each case is explained as follows:
 TODO: example (table?) compare to method in previous paper (loop count)
 
 \subsection{Greedy Computation}
-Computation by dynamic programming gives us an optimal local reject option, but it still might be unfeasible in some cases since it scales quadratically (TODO: by what?). Hence we are looking for a greedy approximation with linear running time. 
+Computation by dynamic programming gives us an optimal local reject option, but it still might be unfeasible in some cases since it "scales quadratically with the number of data" (TODO: quote reject paper). Hence we are looking for a greedy approximation with linear running time. 
 
 \subsection{Evaluation}
 In this chapter we evaluate the described methods. We compare dynamic programming against the greedy approximation and against standard reject methods(TODO:wording). The tests will be performed on randomly generated test data and on certain benchmark data sets.
