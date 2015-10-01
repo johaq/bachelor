@@ -202,7 +202,46 @@ Each case is explained as follows:
 TODO: example (table?) compare to method in previous paper (loop count)
 
 \subsection{Greedy Computation}
-Computation by dynamic programming gives us an optimal local reject option, but it still might be unfeasible in some cases since it "scales quadratically with the number of data" (TODO: quote reject paper). Hence we are looking for a greedy approximation with linear running time. 
+Computation by dynamic programming gives us an optimal local reject option, but it still might be unfeasible in some cases since it "scales quadratically with the number of data" (TODO: quote reject paper). Hence we are looking for a greedy approximation with linear running time. For this approach we define
+\begin{align}
+ 	\bigtriangleup T_{\theta_i(j)}^i = T_{\theta_i(j)}^i-T_{\theta_i(j-1)}^i \\
+	\bigtriangleup F_{\theta_i(j)}^i = F_{\theta_i(j)}^i-F_{\theta_i(j-1)}^i
+\end{align}
+as the amount of true and false rejects gained by a threshold compared to its predecessor and
+$$ g = \bigtriangleup T_{\theta_i}^i - \bigtriangleup F_{\theta_i}^i $$
+as the local gain. The greedy approach lies within choosing the thresholds with the best local gain. Initially all thresholds are set to the most tolerant in each class. Looking at the next strict one in each class we pick the one with the highest local gain until the strictest possible thresholds are reached. The pair of true and false rejects $\left(T_{\theta_i}^i,F_{\theta_i}^i\right)$ is saved in each step if it is an improvement to existing solutions. Algorithm \ref{greedy} details this procedure in pseudo code. 
+
+\begin{algorithm}[!htbp]
+ \KwData{$\mathbb{P}$}
+ \KwResult{set of optimal local reject vectors $\Theta_{opt}$}
+ initialization\;
+ array $opt$ where $opt(n)$ is the maximum number of true rejects with n false ones \;
+ array $theta$ where $theta(n)$ is the optimal threshold vector with n false rejects \; 
+ $\bar{\theta} = \left\{\theta_0(0),...,\theta_N(0)\right\}$ \; 
+ $F :=$ amount of false rejects for $\bar{\theta}$ \;
+ $T :=$ amount of true rejects for $\bar{\theta}$ \;
+ \While{a more strict threshold in at least one class exists}{
+ 	\ForEach{$\theta_i(j) \in \bar{\theta}$}{
+ 		\eIf{$\exists \theta_{i}(j+1)$}{
+ 			$g(i) = \bigtriangleup T_{\theta_i(j+1)}^i - \bigtriangleup F_{\theta_i(j+1)}^i$ \;
+ 		}{
+ 			$g(i) = -\infty$ \;
+ 		}	
+ 	}
+ 	$\hat{i}=\operatorname*{arg\,max}_i g(i)$ \;
+ 	set threshold $\theta_{\hat{i}}(j)$ in $\bar{\theta}$ to $\theta_{\hat{i}}(j+1)$ \;
+ 	$T = T +  \bigtriangleup T_{\theta_{\hat{i}}(j+1)}^i$ \;
+ 	$F = F +  \bigtriangleup F_{\theta_{\hat{i}}(j+1)}^i$ \;
+ 	\If{$opt(F)<T$}{
+ 	 	$opt(F):=T$ \;
+ 	 	$theta(F)=\bar{\theta}$ \;
+ 	}
+ }
+ \KwRet{theta}
+ \BlankLine \BlankLine
+ \caption{Computing optimal local reject options by greedy evaluation.}
+ \label{greedy}
+\end{algorithm}
 
 \subsection{Evaluation}
 In this chapter we evaluate the described methods. We compare dynamic programming against the greedy approximation and against standard reject methods(TODO:wording). The tests will be performed on randomly generated test data and on certain benchmark data sets.
