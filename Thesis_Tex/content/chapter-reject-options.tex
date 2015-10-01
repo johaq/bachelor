@@ -212,7 +212,7 @@ $$ g = \bigtriangleup T_{\theta_i}^i - \bigtriangleup F_{\theta_i}^i $$
 as the local gain. The greedy approach lies within choosing the thresholds with the best local gain. Initially all thresholds are set to the most tolerant in each class. Looking at the next strict one in each class we pick the one with the highest local gain until the strictest possible thresholds are reached. The pair of true and false rejects $\left(T_{\theta_i}^i,F_{\theta_i}^i\right)$ is saved in each step if it is an improvement to existing solutions. Algorithm \ref{greedy} details this procedure in pseudo code. 
 
 \begin{algorithm}[!htbp]
- \KwData{$\mathbb{P}$}
+ \KwData{sets of thresholds $\Theta_i$}
  \KwResult{set of optimal local reject vectors $\Theta_{opt}$}
  initialization\;
  array $opt$ where $opt(n)$ is the maximum number of true rejects with n false ones \;
@@ -244,11 +244,19 @@ as the local gain. The greedy approach lies within choosing the thresholds with 
 \end{algorithm}
 
 \subsection{Evaluation}
-In this chapter we evaluate the described methods. We compare dynamic programming against the greedy approximation and against standard reject methods(TODO:wording). The tests will be performed on randomly generated test data and on certain benchmark data sets.
+In this chapter we evaluate the described methods. We try to confirm the optimality of the dynamic programming method by comparing its result to the brute force algorithm. Furthermore we want to find out how close the greedy approach is to being optimal by comparing it to dynamic programming results.
 
-\subsubsection{Evaluation Method}
-TODO: ARC
+\subsubsection{DP vs Brute Force}
+
 
 \subsubsection{DP vs Greedy}
+\begin{figure}[!htbp]
+\centering
+\caption{Comparison of the thresholds computed greedily (red crosses) and the optimal ones computed by dynamic programming (green circles) on randomly generated data sets. We can see that the greedy strategy is close to optimal and mainly falls off slightly if a lot of points are rejected.}
+\label{greedyEva}
+\begin{tikzpicture}
+	\node {\svg{\textwidth}{greedyComp}};
+\end{tikzpicture}
+\end{figure}
 
-\subsubsection{DP vs Bayes(??)}
+TODO:ARC

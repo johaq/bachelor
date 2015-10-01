@@ -28,7 +28,7 @@ for i = 1:noClass
     v_i(l_init~=l_method) = -1; % ...or incorrectly(-1) classified
     v{i} = v_i;
     
-    v_i_help = [0 v_i];
+    v_i_help = [-1 v_i];
     v_i = [v_i 0];
     theta{i} = [0 find(v_i==1 & v_i_help == -1)]; % possible thresholds where values in v_i change from -1 to 1
 end
@@ -51,8 +51,8 @@ for i=2:length(theta{1})
     for j=2:length(theta{2})
         configFalse = falseRejects{2}(i)+falseRejects{3}(j); %the number of false rejects with this threshold configuration
         configTrue = trueRejects{2}(i)+trueRejects{3}(j); %the number of true rejects with this threshold configuration
-        if(opt(configFalse)<configTrue)
-            opt(configFalse) = configTrue;
+        if(opt(configFalse+1)<configTrue)
+            opt(configFalse+1) = configTrue;
         end
     end
 end
