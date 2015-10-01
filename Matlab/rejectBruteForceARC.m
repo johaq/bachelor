@@ -1,4 +1,6 @@
-function opt = rejectGreedy( initLabels, methodLabels)
+function [opt,arc] = rejectBruteForceARC( initLabels, methodLabels)
+%REJECTBRUTEFORCE Summary of this function goes here
+%   Detailed explanation goes here
 
 noClass = length(unique(initLabels)); % number of classes
 noTrue = sum(initLabels == methodLabels); % number of correctly classified points
@@ -26,7 +28,7 @@ for i = 1:noClass
     v_i(l_init~=l_method) = -1; % ...or incorrectly(-1) classified
     v{i} = v_i;
     
-    v_i_help = [0 v_i];
+    v_i_help = [-1 v_i];
     v_i = [v_i 0];
     theta{i} = [0 find(v_i==1 & v_i_help == -1)]; % possible thresholds where values in v_i change from -1 to 1
 end
@@ -42,52 +44,24 @@ for i = 2:noClass+1
     end
 end
 
-% compute difference of true and false rejects gained by each threshold
-deltaTrueRejects = cell(noClass+1,1);
-deltaTrueRejects{1} = [0 0];
-deltaFalseRejects = deltaTrueRejects;
-for i = 2:noClass+1
-    deltaTrueRejects{i}=[0 0];
-    deltaFalseRejects{i}=[0 0];
-    for j = 3:length(theta{i-1})
-        deltaTrueRejects{i} = [deltaTrueRejects{i} (trueRejects{i}(j)-trueRejects{i}(j-1))];
-        deltaFalseRejects{i} = [deltaFalseRejects{i} (falseRejects{i}(j)-falseRejects{i}(j-1))];
-    end
-end
-
-% compute opt greedily
+% compute opt according to bellmann-equation
 opt = zeros(noTrue+1,1);
-
-FR = 0;
-TR = sum(cellfun(@(first) first(2),trueRejects));
-curTheta = zeros(noClass+1,1)+2;
-finTheta = cellfun(@(a) length(a),trueRejects);
-
-while(sum(curTheta ~= finTheta) > 0)
-    g = zeros(noClass+1,1);
-    for i=1:length(curTheta)
-        if(curTheta(i)<finTheta(i))
-            g(i) = deltaTrueRejects{i}(curTheta(i)+1) - deltaFalseRejects{i}(curTheta(i)+1);
-        else
-            g(i) = -Inf;
-        end
-    end
-    [i,i] = max(g);
-    curTheta(i)=curTheta(i)+1;
-    FR = FR + deltaFalseRejects{i}(curTheta(i));
-    TR = TR + deltaTrueRejects{i}(curTheta(i));
-    if
-end
-
 
 for i=2:length(theta{1})
     for j=2:length(theta{2})
         configFalse = falseRejects{2}(i)+falseRejects{3}(j); %the number of false rejects with this threshold configuration
         configTrue = trueRejects{2}(i)+trueRejects{3}(j); %the number of true rejects with this threshold configuration
-        if(opt(configFalse)<configTrue)
-            opt(configFalse) = configTrue;
+        if(opt(configFalse+1)<configTrue)
+            opt(configFalse+1) = configTrue;
         end
     end
+end
+
+arc = zeros(length(opt),2);
+
+for i=1:(length(arc))
+    arc(i,1) = (noTrue+noFalse-i-opt(i))/(noTrue+noFalse);
+    arc(i,2) = (noTrue - i)/((noTrue+noFalse-i-opt(i)));
 end
 
 end
