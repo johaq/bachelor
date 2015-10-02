@@ -2,6 +2,12 @@
 % into 2 classes (above and below 0). To get some falsely classified
 % points we add an array of false labels at randomly selected points.
 
+hFig = figure(1);
+set(hFig, 'Position', [100 0 1000 700])
+
+counter=1;
+for z=1:3
+    for y=1:3
 rndDeviation = 1;
 rndMean = 0;
 noPoints = 400;
@@ -39,28 +45,34 @@ rndLabels = rndLabels(index);
 rndInitLabels = rndInitLabels(index);
 
 %test
-close all
-%optDP = rejectDP(rndInitLabels,rndLabels)
+
+optDP = rejectDP(rndInitLabels,rndLabels)
 optBF = rejectBruteForce(rndInitLabels,rndLabels)
 %optDP = rejectDPgraphic(rndInitLabels,rndLabels)
-optGreedy = rejectGreedy(rndInitLabels,rndLabels)
+%optGreedy = rejectGreedy(rndInitLabels,rndLabels)
 
 
-%% paretofront comparison
-close all
-hold on
-for i=1:10
-    for j=1:10
-        subplot(i,j,i*);
-        xlabel('True Rejects');
-        ylabel('False Rejects');
+% paretofront comparison
 
-        [I,M] = find(optGreedy ~=0)
-        plot(optGreedy(I), I,'r');
-        scatter(optGreedy(I), I,'r','+');
+%hold on
 
-        xlabel('True Rejects');
-        ylabel('False Rejects');
+        subplot(3,3,counter);
+        hold on
+        axis([0 65 0 150]);
+        if(counter>6)
+            xlabel('True Rejects');
+        else
+            xlabel('');
+            set(gca,'XTickLabel',{});
+        end
+        if(mod((counter-1),3) == 0)
+            ylabel('False Rejects');
+        else
+            ylabel('');
+            set(gca,'YTickLabel',{}) 
+        end
+        counter = counter + 1;
+        
 
         maxi = 0;
         for i=1:length(optBF)
@@ -74,8 +86,29 @@ for i=1:10
 
         [I,M] = find(optBF ~=0)
 
-        plot(optBF(I),I,'g');
+        plot(optBF(I),I,'g-');
         scatter(optBF(I),I,'g');
+        
+        optDPmax = zeros(length(optDP),1);
+        for l=1:length(optDP)
+            optDPmax(l) = max(optDP(l,:));
+        end
+        
+        maxi = 0;
+        for i=1:length(optDPmax)
+            if(optDPmax(i)<=maxi)
+                optDPmax(i)=0;
+            else
+                maxi=optDPmax(i);
+            end
+
+        end
+        
+        [I,M] = find(optDPmax ~=0)
+        plot(optDPmax(I), I,'r--');
+        scatter(optDPmax(I), I,'r','+');
+        
+        hold off
     end
 end
-hold off
+%hold off

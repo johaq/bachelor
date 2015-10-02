@@ -244,19 +244,41 @@ as the local gain. The greedy approach lies within choosing the thresholds with 
 \end{algorithm}
 
 \subsection{Evaluation}
-In this chapter we evaluate the described methods. We try to confirm the optimality of the dynamic programming method by comparing its result to the brute force algorithm. Furthermore we want to find out how close the greedy approach is to being optimal by comparing it to dynamic programming results.
+In this chapter we evaluate the described methods. We try to confirm the optimality of the dynamic programming method by comparing its result to the brute force algorithm. Furthermore we want to find out how close the greedy approach is to being optimal.
+
+\subsubsection{Data Sets}
+TODO
+
+\subsubsection{Methods}
+In regards to our definition of an optimal threshold (see chapter \ref{optimalt}) we use the true and false rejects of each threshold considered to be optimal by the respective method. To further see the behavior of the reject options we introduce a measure of quality of the classification in a second evaluation method. (TODO: ref to arc paper).
+
 
 \subsubsection{DP vs Brute Force}
-
+\begin{figure}[!htbp]
+\centering
+\caption{DP vs BF.}
+\label{dpEvaPareto}
+\begin{tikzpicture}
+	\node {\svg{\textwidth}{dpComp}};
+\end{tikzpicture}
+\end{figure}
 
 \subsubsection{DP vs Greedy}
 \begin{figure}[!htbp]
 \centering
-\caption{Comparison of the thresholds computed greedily (red crosses) and the optimal ones computed by dynamic programming (green circles) on randomly generated data sets. We can see that the greedy strategy is close to optimal and mainly falls off slightly if a lot of points are rejected.}
-\label{greedyEva}
+\caption{Comparison of the thresholds computed greedily (red crosses) and the optimal ones computed by dynamic programming (green circles) on randomly generated data sets. We can see that the greedy strategy is close to optimal and sometimes falls off slightly if a lot of points are rejected.}
+\label{greedyEvaPareto}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{greedyComp}};
 \end{tikzpicture}
 \end{figure}
 
-TODO:ARC
+
+\begin{figure}[!htbp]
+\centering
+\caption{ARC greedy vs dp.}
+\label{greedyEvaARC}
+\begin{tikzpicture}
+	\node {\svg{\textwidth}{greedyARC}};
+\end{tikzpicture}
+\end{figure}
