@@ -174,7 +174,7 @@ opt(n,j,i) = \max_{\bar{\theta}}
   	 & \theta_k \in & \theta_k(0) \forall k > j
 \end{Bmatrix}
 $$
-(TODO: define $	\left|T_{\bar{\theta}}\right|$ and $\left|F_{\bar{\theta}}\right|$ ???) \\
+(TODO: define $	\left|T_{\bar{\theta}}\right|$ and $\left|F_{\bar{\theta}}\right|$ ??? and range of n,j,i) \\
 be the maximum number of true rejects with $n$ false rejects while considering all thresholds in classes before class $j$ and the first $i$ thresholds in class $j$. All $\bar{\theta}$ corresponding to $opt(n,N,\left|\Theta_N\right|-1) \forall n<\left|L\right|$ fulfill our criteria for an optimal threshold vector. \\
 This results in the Bellmann equation \ref{DP} to efficiently compute $opt$:
 
@@ -198,7 +198,9 @@ Each case is explained as follows:
 \item Case \ref{DPcase4}: The chosen threshold $i$ in class $j$ exceeds the allowed amount of false rejects, so the next less strict threshold is considered.
 \item Case \ref{DPcase5}: Here the $i$th threshold in $j$ is a possible threshold but it is not clear whether it is optimal. We consider both cases. If it is not the optimal threshold, we take the next less strict one. If it is optimal, we continue our search in the previous class but with $|F_{\Theta_j(i)}^j|$ less allowed false rejects in consequence to choosing this threshold. The other consequence is that this threshold results in a number of gained true rejects compared to the least strict threshold and this gain is added.
 \end{itemize}
-\TODO: example (table?) compare to method in previous paper (loop count)
+
+This Bellmann equation can be computed by dynamic programming (see algorithm TODO). We use three nested loops over $n$, $j$ and $i$. This results in a processing time of $\mathbb{O}(|L| \cdot N \cdot \max_k \left|\Theta_k\right|)$. 
+Note that this equal in effort to the previous method in (TODO:ref to reject paper) but that the worst case is far less likely to occur here since it would mean that there are no clusters of classification errors. Every grouping of falsely classified points means less computation time than the previous method.
 
 \subsection{Greedy Computation}
 \label{greedyAlg}
@@ -290,7 +292,7 @@ Since there is no formal proof that the Bellman equation (see chapter \ref{dp}) 
 \end{figure}
 
 \subsubsection{DP vs Greedy}
-We now compare the results of the greedy strategy (see chapter \ref{greedyAlg}) to the optimum. If the results are nearly accurate it is a feasible solution for big data sets since its running time is linear. We can observe in figure \ref{greedyEvaPareto} that the results of the greedy computation are mostly close to being optimal or even optimal and that far outliers are rare and not extreme (TODO:wording). Using our second evaluation method (see figure \ref{greedyEvaARC}) we can observe that the greedy reject options lead to a very similar quality of classification as the ideal ones (todo: again wording).
+We now compare the results of the greedy strategy (see chapter \ref{greedyAlg}) to the optimum. If the results are nearly accurate it is a feasible solution for big data sets since its running time is linear. We can observe in figure \ref{greedyEvaPareto} that the results of the greedy computation are mostly close to being optimal or even optimal and that far outliers are rare and not extreme (TODO:wording). Using our second evaluation method (see figure \ref{greedyEvaARC}) we can observe that the greedy reject options lead to a very similar quality of classification as the ideal ones (TODO: again wording).
 
 \begin{figure}[!htbp]
 \centering
