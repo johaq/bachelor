@@ -245,10 +245,10 @@ as the local gain. The greedy approach lies within choosing the thresholds with 
  \label{greedy}
 \end{algorithm}
 
-\subsection{Evaluation}
+\section{Evaluation}
 In this chapter we evaluate the described methods. We try to confirm the optimality of the dynamic programming method by comparing its result to the brute force algorithm. Furthermore we want to find out how close the greedy approach is to being optimal.
 
-\subsubsection{Data Sets}
+\subsection{Data Sets}
 For our evaluation we use randomly generated data sets. Using a normal distribution we get random samples of points divided into two classes, above and below $0$. We now introduce further normal distributions at random locations to get cluster of falsely classified points (see figure \ref{dataset}).
 
 \begin{figure}[!htbp]
@@ -275,11 +275,11 @@ For our evaluation we use randomly generated data sets. Using a normal distribut
 \end{tikzpicture}
 \end{figure}
 
-\subsubsection{Methods}
+\subsection{Methods}
 In regards to our definition of an optimal threshold (see chapter \ref{optimalt}) we use the true and false rejects of each threshold considered to be optimal by the respective method. To further see the behavior of the reject options we introduce a measure of quality of the classification in a second evaluation method. (TODO: ref to arc paper).
 
 
-\subsubsection{DP vs Brute Force}
+\subsection{DP vs Brute Force}
 Since there is no formal proof that the Bellman equation (see chapter \ref{dp}) finds every optimal reject option we compare its result to the outcome of the brute force method. We can see in figure \ref{dpEvaPareto} that the results match for nine different generated data sets. Although this is, of course, no proof we conclude for now that the dynamic programming algorithm finds optimal thresholds.
 
 \begin{figure}[!htbp]
@@ -291,7 +291,7 @@ Since there is no formal proof that the Bellman equation (see chapter \ref{dp}) 
 \end{tikzpicture}
 \end{figure}
 
-\subsubsection{DP vs Greedy}
+\subsection{DP vs Greedy}
 We now compare the results of the greedy strategy (see chapter \ref{greedyAlg}) to the optimum. If the results are nearly accurate it is a feasible solution for big data sets since its running time is linear. We can observe in figure \ref{greedyEvaPareto} that the results of the greedy computation are mostly close to being optimal or even optimal and that far outliers are rare and not extreme (TODO:wording). Using our second evaluation method (see figure \ref{greedyEvaARC}) we can observe that the greedy reject options lead to a very similar quality of classification as the ideal ones (TODO: again wording).
 
 \begin{figure}[!htbp]
