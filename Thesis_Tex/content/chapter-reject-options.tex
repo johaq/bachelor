@@ -41,7 +41,7 @@ T_\theta &= R \cap E \\
 F_\theta &= R \cap L
 \end{align}
 Naturally we want $|T_\theta|$ to be large and $|F_\theta|$ to be small. Since these two goals often contradict each other, e.g. more true rejects most times bring more false ones (see figure \ref{incTaF}), there is no single optimal choice of $\theta$ in general. Still there is a set of values that we consider optimal. As shown above each $\theta$ corresponds to a tuple $(|T_\theta|,|F_\theta|)$. $\theta$ is optimal if
-$$ \nexists \theta^{'} : |F_\theta^{'}|\leq|F_\theta|, |T_\theta^{'}|\geq|T_\theta| $$ and at least one term is unequal (TODO: wording?). 
+$$ \nexists \theta^{'} : |F_\theta^{'}|\leq|F_\theta|, |T_\theta^{'}|\geq|T_\theta| $$ and at least one inequality holds. 
 
 \begin{figure}[!htbp]
 \centering
@@ -56,7 +56,7 @@ $$ \nexists \theta^{'} : |F_\theta^{'}|\leq|F_\theta|, |T_\theta^{'}|\geq|T_\the
 \label{findt}
 Now that we know how to evaluate our thresholds we still need to know where to look for them. Obviously $\theta$ needs to be in the range of $r$ so
 $$ \Theta := \{\theta \in \mathbb{R} \ | \ \theta < \operatorname*{max}_{\bar{x}} r(\bar{x})\}  $$
-is a set of possible thresholds. But it would leave us with an infinite search area (TODO: wording?) but this is easily reduced when recognized that it is unnecessary to consider multiple thresholds in between two points that are next to each other (when sorted according to $r$). So with $\Theta := \{r(\bar{x}) | \forall \bar{x} \in X\}$ we have a feasible set of possible thresholds. It can be refined by looking again at our criteria for an optimal $\theta$. We want $|T_\theta|$, the amount fo true rejects, to be large so we should skip cluster of true rejects since choosing a point in the middle of such cluster can not be better than the point at the end of it. Additionally we want  $|F_\theta|$, the amount fo false rejects, to be small, so we should skip cluster of false rejects since a point in the middle of such cluster can not be better than a point at the beginning of it. In conclusion this means that it is sufficient to consider only points at the beginning of clusters of false rejects, so
+is a set of possible thresholds. But it would leave us with an infinite search area (TODO: wording?) but this is easily reduced when recognized that it is unnecessary to consider multiple thresholds in between two points that are next to each other (when sorted according to $r$). So with $\Theta := \{r(\bar{x}) | \forall \bar{x} \in X\}$ we have a feasible set of possible thresholds. It can be refined by looking again at our criteria for an optimal $\theta$. We want $|T_\theta|$, the amount of true rejects, to be large so we should skip cluster of true rejects since choosing a point in the middle of such cluster can not be better than the point at the end of it. Additionally we want  $|F_\theta|$, the amount of false rejects, to be small, so we should skip cluster of false rejects since a point in the middle of such cluster can not be better than a point at the beginning of it. In conclusion this means that it is sufficient to consider only points at the beginning of clusters of false rejects, so
 $$ \Theta := \{r(\bar{x}_i) \ | \ \bar{x}_i \in L, \ \bar{x}_{i-1} \in E,\ \bar{x}_{i+1} \in L \} $$
 where $i$ is the index of the points in $X$ when sorted according to $r$. This gives us an easily computed set of thresholds to consider to be optimal (see figures \ref{possibleThresholds} and \ref{paretoFront}.)
 
@@ -103,13 +103,13 @@ Let us now expand the problem to a classifier for $N$ multiple classes.
 By using a one vs all strategy, we get $N$ binary classifiers $f_i$ like in chapter \ref{twoclasses} and an according measure of confidence $r_i$. Points are now classified in the class where confidence is maximal among all classes. This gives us a multi class classifier $f$ with
 \begin{align}
  f: \mathbb{R}^n &\to \{1,...,i\} \\
-   \bar{x} &\mapsto i \ | \ \operatorname*{arg\,max}_i r_i(\bar{x}) 
+   \bar{x} &\mapsto \operatorname*{arg\,max}_i r_i(\bar{x}) 
 \end{align}
 
 \subsection{Global Reject}
 To adapt our reject strategy from before, we search for a threshold $\theta$ and reject according to our measures of confidence:
 $$ \operatorname*{max}_i r_i(\bar{x}) < \theta \ : \ \bar{x} \ \text{rejected}  $$
-We look again to choose $\theta$ so that it meets our requirements for an optimal threshold (see chapter \ref{optimalt}). This strategy comes with the problem that it relies on all measures $r_i$ to be scaled the same way (TODO: exmaple?). While there might be a workaround for this a global reject is still imprecise when the internal structures of the classes differ a lot(see figure \ref{classStructure}). A reasonable threshold for a class with most points and also most classification errors near the decision plane is probably not well suited for a class with a wider (TODO: wording?) set of data points. This leads to the idea of having individual thresholds for each class.
+We look again to choose $\theta$ so that it meets our requirements for an optimal threshold (see chapter \ref{optimalt}). This strategy comes with the problem that it relies on all measures $r_i$ to be scaled the same way. While there might be a workaround for this, e.g. using probabilities as scale, a global reject is still imprecise when the internal structures of the classes differ a lot(see figure \ref{classStructure}). A reasonable threshold for a class with most points and also most classification errors near the decision plane is probably not well suited for a class with a larger variance in its set of data points. This leads to the idea of having individual thresholds for each class.
 
 \begin{figure}[!htbp]
 \centering
@@ -123,8 +123,8 @@ We look again to choose $\theta$ so that it meets our requirements for an optima
 
 \subsection{Local Reject}
 To account for differences in class structure each one now has a local reject threshold $\theta_i$. A point is rejected if
-$$ \operatorname*{max}_i r_i(\bar{x}) < \theta_i \ | \ \forall \bar{x} \  \text{where} \ f(\bar{x}) = i $$ (TODO: need max?)
-This gives us an i-dimensional threshold vector $\bar{\theta} = (\theta_1,...,\theta_i)$. Each $\theta_i$ regulates the reject practice only in their respective class. (TODO: example)
+$$ r_i(\bar{x}) < \theta_i \ | \ \forall \bar{x} \  \text{where} \ f(\bar{x}) = i $$
+This gives us an N-dimensional threshold vector $\bar{\theta} = (\theta_1,...,\theta_N)$. Each $\theta_i$ regulates the reject practice only in their respective class. (TODO: example)
 
 \subsection{Optimal Local Reject}
 For each threshold $\theta_i$ the same criteria apply to determine if it is optimal as for a global threshold (see chapter \ref{optimalt}). With the difference that we look at each class individually. So the true and false rejects are now given by
@@ -132,15 +132,13 @@ For each threshold $\theta_i$ the same criteria apply to determine if it is opti
 T_{\theta_i}^i &= R_{\theta_i}^i \cap E_i \\ 
 F_{\theta_i}^i &= R_{\theta_i}^i \cap L_i
 \end{align}
-where $R_{\theta_i}^i$ is the amount of rejected points in class $i$ given the threshold $\theta_i$, $E_i$ the amount of falsely classified points in class $i$ and $L_i$ the amount of correctly classified points in $i$. As before we consider a certain set $\Theta_i$ of possible thresholds for each class (see chapter \ref{findt}). We conclude that the threshold vector $\bar{\theta}=(\theta_1,...,\theta_N)$ is optimal if each $\theta_i$ is optimal. 
+where $R_{\theta_i}^i$ is the amount of rejected points in class $i$ given the threshold $\theta_i$, $E_i$ the amount of falsely classified points in class $i$ and $L_i$ the amount of correctly classified points in $i$. As before we consider a certain set $\Theta_i$ of possible thresholds for each class (see chapter \ref{findt}). We conclude that the threshold vector $\bar{\theta}=(\theta_1,...,\theta_N)$ is optimal if each $\theta_i$ is optimal. Conversely an optimal $\theta_i$ is not necessarily a component of an optimal vector $\bar{\theta}$.
 
-
-%To now find the optimal local reject vector $\bar{\theta}$ we need to consider every combination of thresholds %in the sets $\Theta_i$ of possible optimal thresholds. Brute forcing this would mean that finding %$\bar{\theta}$ has an exponential complexity. However the problem is equivalent to it a multiple choice %knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to %costs, and true rejects correspond to their value. (TODO: link)
 
 \subsection{Computation by Brute Force}
 To now find the optimal local reject vectors $\bar{\theta}$ with a brute force approach we need to consider every combination of thresholds in the sets $\Theta_i$. Let
 $$ \mathbb{P} = \left\{\bar{\theta} = \left(\theta_1,...,\theta_N\right) \in \Theta_1 \times ... \times \Theta_N \right\} $$
-be the set of all permutations of the sets of optimal thresholds from each class. Algorithm \ref{bruteForce} describes in pseudo code how to find all $\bar{\theta}$.
+be the set of all choices from the sets of optimal thresholds of each class. Algorithm \ref{bruteForce} describes in pseudo code how to find all optimal $\bar{\theta}$.
 
 \begin{algorithm}[!htbp]
  \KwData{$\mathbb{P}$}
@@ -163,13 +161,14 @@ be the set of all permutations of the sets of optimal thresholds from each class
 \end{algorithm}
 
 \subsection{Computation by Dynamic Programming}
+\label{dp}
 Computation by brute force scales exponentially with the number of classes and is therefore not a feasible solution for large data sets with lots of clusters. But our problem is equivalent to a multiple choice knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to costs, and true rejects correspond to their value (TODO:link). This allows us a faster solution that still maintains optimal results.
 Let
 
 $$
 opt(n,j,i) = \max_{\bar{\theta}}
 \begin{Bmatrix}
-	 & \left|F_{\bar{\theta}}\right| =  & n \\
+	 & \left|F_{\bar{\theta}}\right| \leq  & n \\
   	\left|T_{\bar{\theta}}\right| \ s.t. & \theta_k \in & \Theta_k \forall k < j \\
   	 & \theta_j \in & \left\{\theta_j(0),...,\theta_j(i)\right\} \\
   	 & \theta_k \in & \theta_k(0) \forall k > j
@@ -186,7 +185,7 @@ This results in the Bellmann equation \ref{DP} to efficiently compute $opt$:
 \text{if} \ 0<n<\left|F_{\Theta_j(i)}^j\right|\text{,}\ j>0 :  &$ opt\left(n,j,i-1\right)$ \label{DPcase4}\\
 \text{if} \ n \geq \left|F_{\Theta_j(i)}^j\right|>0\text{,}\ j>0 :  &$ max\Bigg\{opt\left(n,j,i-1\right),$ \notag \\
 &$\ opt\left(n-\left|F_{\Theta_j(i)}^j\right|,j-1,\left|\Theta_{j-1}\right|-1\right)+$ \notag\\
-&$\ \left|F_{\Theta_j(i)}^j\right|-\left|F_{\Theta_j(0)}^j\right|\Bigg\}$ \label{DPcase5}
+&$\ \left|T_{\Theta_j(i)}^j\right|-\left|T_{\Theta_j(0)}^j\right|\Bigg\}$ \label{DPcase5}
 \end{subnumcases} 
 
 
@@ -199,9 +198,10 @@ Each case is explained as follows:
 \item Case \ref{DPcase4}: The chosen threshold $i$ in class $j$ exceeds the allowed amount of false rejects, so the next less strict threshold is considered.
 \item Case \ref{DPcase5}: Here the $i$th threshold in $j$ is a possible threshold but it is not clear whether it is optimal. We consider both cases. If it is not the optimal threshold, we take the next less strict one. If it is optimal, we continue our search in the previous class but with $|F_{\Theta_j(i)}^j|$ less allowed false rejects in consequence to choosing this threshold. The other consequence is that this threshold results in a number of gained true rejects compared to the least strict threshold and this gain is added.
 \end{itemize}
-TODO: example (table?) compare to method in previous paper (loop count)
+\TODO: example (table?) compare to method in previous paper (loop count)
 
 \subsection{Greedy Computation}
+\label{greedyAlg}
 Computation by dynamic programming gives us an optimal local reject option, but it still might be unfeasible in some cases since it "scales quadratically with the number of data" (TODO: quote reject paper). Hence we are looking for a greedy approximation with linear running time. For this approach we define
 \begin{align}
  	\bigtriangleup T_{\theta_i(j)}^i = T_{\theta_i(j)}^i-T_{\theta_i(j-1)}^i \\
@@ -209,7 +209,7 @@ Computation by dynamic programming gives us an optimal local reject option, but 
 \end{align}
 as the amount of true and false rejects gained by a threshold compared to its predecessor and
 $$ g = \bigtriangleup T_{\theta_i}^i - \bigtriangleup F_{\theta_i}^i $$
-as the local gain. The greedy approach lies within choosing the thresholds with the best local gain. Initially all thresholds are set to the most tolerant in each class. Looking at the next strict one in each class we pick the one with the highest local gain until the strictest possible thresholds are reached. The pair of true and false rejects $\left(T_{\theta_i}^i,F_{\theta_i}^i\right)$ is saved in each step if it is an improvement to existing solutions. Algorithm \ref{greedy} details this procedure in pseudo code. 
+as the local gain. The greedy approach lies within choosing the thresholds with the best local gain. Initially all thresholds are set to the most tolerant in each class. Looking at the next strict one in each class we pick the one with the highest local gain until the strictest possible thresholds are reached. The pair of true and false rejects $\left(T_{\theta_i}^i,F_{\theta_i}^i\right)$ is saved in each step if it is an improvement to an existing solutions. Algorithm \ref{greedy} details this procedure in pseudo code. 
 
 \begin{algorithm}[!htbp]
  \KwData{sets of thresholds $\Theta_i$}
@@ -247,16 +247,42 @@ as the local gain. The greedy approach lies within choosing the thresholds with 
 In this chapter we evaluate the described methods. We try to confirm the optimality of the dynamic programming method by comparing its result to the brute force algorithm. Furthermore we want to find out how close the greedy approach is to being optimal.
 
 \subsubsection{Data Sets}
-TODO
+For our evaluation we use randomly generated data sets. Using a normal distribution we get random samples of points divided into two classes, above and below $0$. We now introduce further normal distributions at random locations to get cluster of falsely classified points (see figure \ref{dataset}).
+
+\begin{figure}[!htbp]
+\centering
+\caption{Example of a small generated data set with one cluster of falsely classified points in each class.}
+\label{dataset}
+\begin{tikzpicture}
+	\node {\svg{\textwidth}{rndDataSet}};
+	\begin{axis}[hide axis,
+	  no markers, domain=0:10, samples=200,
+	  axis lines*=left, xlabel=$x$, ylabel=$y$,
+	  every axis y label/.style={at=(current axis.above origin),anchor=south},
+	  every axis x label/.style={at=(current axis.right of origin),anchor=west},
+	  height=2.5cm, width=6cm,
+	  xtick={4,6.5}, ytick=\empty,
+	  enlargelimits=false, clip=false, axis on top,
+	  grid = major,
+	  at={(-400,-260)}
+	  ]
+	  \addplot [thick,myBlue!50!black] {gauss(1.35,0.3)};
+	  \addplot [thick,myBlue!50!black] {gauss(8.95,0.3)};
+	\end{axis}
+	
+\end{tikzpicture}
+\end{figure}
 
 \subsubsection{Methods}
 In regards to our definition of an optimal threshold (see chapter \ref{optimalt}) we use the true and false rejects of each threshold considered to be optimal by the respective method. To further see the behavior of the reject options we introduce a measure of quality of the classification in a second evaluation method. (TODO: ref to arc paper).
 
 
 \subsubsection{DP vs Brute Force}
+Since there is no formal proof that the Bellman equation (see chapter \ref{dp}) finds every optimal reject option we compare its result to the outcome of the brute force method. We can see in figure \ref{dpEvaPareto} that the results match for nine different generated data sets. Although this is, of course, no proof we conclude for now that the dynamic programming algorithm finds optimal thresholds.
+
 \begin{figure}[!htbp]
 \centering
-\caption{DP vs BF.}
+\caption{This figure shows the true and false rejects for the thresholds considered optimal by dynamic programming(red crosses) and by brute force(red circles) on different randomly generated data sets. We can see that the results coincide in each case. }
 \label{dpEvaPareto}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{dpComp}};
@@ -264,6 +290,8 @@ In regards to our definition of an optimal threshold (see chapter \ref{optimalt}
 \end{figure}
 
 \subsubsection{DP vs Greedy}
+We now compare the results of the greedy strategy (see chapter \ref{greedyAlg}) to the optimum. If the results are nearly accurate it is a feasible solution for big data sets since its running time is linear. We can observe in figure \ref{greedyEvaPareto} that the results of the greedy computation are mostly close to being optimal or even optimal and that far outliers are rare and not extreme (TODO:wording). Using our second evaluation method (see figure \ref{greedyEvaARC}) we can observe that the greedy reject options lead to a very similar quality of classification as the ideal ones (todo: again wording).
+
 \begin{figure}[!htbp]
 \centering
 \caption{Comparison of the thresholds computed greedily (red crosses) and the optimal ones computed by dynamic programming (green circles) on randomly generated data sets. We can see that the greedy strategy is close to optimal and sometimes falls off slightly if a lot of points are rejected.}
@@ -276,7 +304,7 @@ In regards to our definition of an optimal threshold (see chapter \ref{optimalt}
 
 \begin{figure}[!htbp]
 \centering
-\caption{ARC greedy vs dp.}
+\caption{ARCs for data sets classified with optimal rejects (green curve) and with greedy rejects (red dashed curve).}
 \label{greedyEvaARC}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{greedyARC}};

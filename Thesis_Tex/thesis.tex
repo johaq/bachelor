@@ -71,6 +71,12 @@
 \usepackage{amssymb}
 \usepackage{amsmath,bm,svg,cases,algorithm2e}
 
+\usepackage{pgfplots}
+\pgfmathdeclarefunction{gauss}{2}{%
+  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+}
+
+
 \setsvg{inkscape={"/usr/bin/inkscape"}}
 
 \usepackage{tikz}
