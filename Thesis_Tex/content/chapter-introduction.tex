@@ -4,11 +4,17 @@
 \label{sec:intro}
 
 \section{Scope}
-In 2008 Nature wrote that Google was "[g]oing from a collection of donated servers housed under a desk to a global network of dedicated data centres processing information by the petabyte" (TODO:cite) and former Google CEO Eric Schmidt said himself that "There were 5 exabytes of information created between the dawn of civilization through 2003, but that much information is now created every 2 days." Since then countless more companies are specializing in mining and more importantly analyzing large heaps of data, the phrase "Big Data" is prevalent.
+In 2008 Nature wrote that Google was "[g]oing from a collection of donated servers housed under a desk to a global network of dedicated data centres processing information by the petabyte" (TODO:cite) and former Google CEO Eric Schmidt said himself that "There were 5 exabytes of information created between the dawn of civilization through 2003, but that much information is now created every 2 days." Since then countless more companies are specializing in mining and, more importantly, analyzing large heaps of data, the phrase "Big Data" is prevalent. Machine Learning provides central techniques for this analysis and classification is one of its basic applications \cite[p. 5]{Alp:2010}. Big Data demands new approaches to classification and has different requirements in quality than just the accuracy. Life long learning \cite[p. 3]{Sut:2014} and real-time capability, one of the design principles of Industry 4.0 \cite[p. 12]{Her:2015}, call for more flexible and adaptable models. One way is to provide a classification confidence \cite{Del:2005} to add more information than just a class label. Based on that a classification model can be easily changed to account for shifting demands, e.g. only accept points with high confidence in critical applications. Thus reject options and error handling are becoming more important. We aim to find a method that provides optimal reject options based on classification confidence.
 
 \section{Related Work}
+First we want to look at two different state of the art methods for reject options and explain how we want to expand on them.
+
+\cite{Ste:2000}
+
+\cite{Cho:1970}
 
 \section{Focus}
 The focus of this work will be to formulate a reject strategy that finds optimal thresholds regardless of the  structure of the data and classes. This strategy will be largely based on concepts introduced in the paper \cite{Fis:2015}. In order to expand on these concepts we try to find a more efficient solution by reducing the number of considered thresholds, thus leading to a faster computation time while maintaining optimality.
 
 \section{Structure}
+
