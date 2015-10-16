@@ -2,16 +2,14 @@
 %
 \chapter{Introduction}
 \label{sec:intro}
-\TODO: clean-thesis verwendet
 
 \section{Scope}
 In 2008 Nature wrote that Google was "[g]oing from a collection of donated servers housed under a desk to a global network of dedicated data centres processing information by the petabyte" (TODO:cite) and former Google CEO Eric Schmidt said himself that "There were 5 exabytes of information created between the dawn of civilization through 2003, but that much information is now created every 2 days." Since then countless more companies are specializing in mining and, more importantly, analyzing large heaps of data, the phrase "Big Data" is prevalent. Machine Learning provides central techniques for this analysis and classification is one of its basic applications \cite[p. 5]{Alp:2010}. Big Data demands new approaches to classification and has different requirements in quality than just the accuracy. Life long learning \cite[p. 3]{Sut:2014} and real-time capability, one of the design principles of Industry 4.0 \cite[p. 12]{Her:2015}, call for more flexible and adaptable models. One way is to provide a classification confidence \cite{Del:2005} to add more information than just a class label. Based on that a classification model can be easily changed to account for shifting demands, e.g. only accept points with high confidence in critical applications. Thus reject options and error handling are becoming more important. We aim to find a method that provides optimal reject options based on classification confidence.
 
 \section{Related Work}
 First we want to look at two different state of the art methods for reject options and explain how we base our work on them and where we diverge. \\
-There are several methods that build upon the knowledge of the probability density of the classes as proposed in \cite{Cho:1970}. This approach commonly yields a global reject threshold hence the assumption of similar class structures is made. While we consider the possibility of a global reject we will decide on local thresholds (see chapter \ref{localreject}). Furthermore we allow any real valued confidence measure not just probabilities. 
-
-\cite{Ste:2000}
+There are several methods that build upon the knowledge of the probability density of the classes as proposed in \cite{Cho:1970}. This approach commonly yields a global reject threshold hence the assumption of similar class structures is made. While we consider the possibility of a global reject we will decide on local thresholds (see chapter \ref{localreject}). Furthermore we allow any real valued confidence measure not just probabilities. \\
+Approach \cite{Sug:2013} detects outliers within a class by comparing the distance of a point to other points in his class, thus introducing a confidence measure that can be computed within a class and does not take intuitive measures into account, like the distance to the decision hyperplane. While the examples in this thesis focus on conventional confidence measures, in theory this is an applicable way to formulate confidence that works with the methods proposed below.
 
 \section{Focus}
 \label{focus}
