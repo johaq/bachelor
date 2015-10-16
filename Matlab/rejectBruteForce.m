@@ -47,12 +47,24 @@ end
 % compute opt according to bellmann-equation
 opt = zeros(noTrue+1,1);
 
-for i=2:length(theta{1})
-    for j=2:length(theta{2})
-        configFalse = falseRejects{2}(i)+falseRejects{3}(j); %the number of false rejects with this threshold configuration
-        configTrue = trueRejects{2}(i)+trueRejects{3}(j); %the number of true rejects with this threshold configuration
-        if(opt(configFalse+1)<configTrue)
-            opt(configFalse+1) = configTrue;
+for a=2:length(theta{1})
+    for b=2:length(theta{2})
+        for c=2:length(theta{3})
+            for d=2:length(theta{4})
+                for e=2:length(theta{5})
+                    for f=2:length(theta{6})
+                        for g=2:length(theta{7})
+                            for h=2:length(theta{8})
+                                configFalse = falseRejects{2}(a)+falseRejects{3}(b)+falseRejects{4}(c)+falseRejects{5}(d)+falseRejects{6}(e)+falseRejects{7}(f)+falseRejects{8}(g)+falseRejects{9}(h);
+                                configTrue = trueRejects{2}(a)+trueRejects{3}(b)+trueRejects{4}(c)+trueRejects{5}(d)+trueRejects{6}(e)+trueRejects{7}(f)+trueRejects{8}(g)+trueRejects{9}(h);
+                                if(opt(configFalse+1)<configTrue)
+                                    opt(configFalse+1) = configTrue;
+                                end
+                            end
+                        end
+                    end
+                end
+            end
         end
     end
 end

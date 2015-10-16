@@ -7,16 +7,16 @@ testBF=zeros(10,1);
 
 for z=1:10
     z
-    rndDeviation = eye(3);
-    rndMean = [0,0,0];
-    noPoints = 100+z*10;
+    rndDeviation = [1,0;0,1];
+    rndMean = [0,0];
+    noPoints = 400;
     rndSample = mvnrnd(rndMean,rndDeviation,noPoints); 
     %rndSample = sort(rndSample);
     rndLabels = sign(rndSample);
     rndInitLabels = rndLabels;
 
     % add falsely classified points
-    noFalseFields = noPoints/20; % number of distributions used to insert possible true rejects
+    noFalseFields = 20; % number of distributions used to insert possible true rejects
 
 
     for i = 1:noFalseFields
@@ -29,11 +29,18 @@ for z=1:10
         end
     end
 
-    rndLabels(rndLabels == -1) = 0;
-    rndLabels = bi2de([rndLabels(:,1),rndLabels(:,2),rndLabels(:,3)])+1;
 
-    rndInitLabels(rndInitLabels == -1) = 0;
-    rndInitLabels = bi2de([rndInitLabels(:,1),rndInitLabels(:,2),rndInitLabels(:,3)])+1;
+    rndLabels = round(atan2(rndLabels(:,1),rndLabels(:,2)));
+    rndLabels(rndLabels == 1) = 3;
+    rndLabels(rndLabels == 2) = 4;
+    rndLabels(rndLabels == -2) = 1;
+    rndLabels(rndLabels == -1) = 2;
+
+    rndInitLabels = round(atan2(rndInitLabels(:,1),rndInitLabels(:,2)));
+    rndInitLabels(rndInitLabels == 1) = 3;
+    rndInitLabels(rndInitLabels == 2) = 4;
+    rndInitLabels(rndInitLabels == -2) = 1;
+    rndInitLabels(rndInitLabels == -1) = 2;
 
 
     % plot
@@ -57,7 +64,7 @@ end
 %%
 X=[1:10];
 X=X.*10;
-X=X+100;
+X=X+500;
 hold on
 xlabel('Number of Points');
 ylabel('Running Time');

@@ -132,9 +132,9 @@ We look again to choose $\theta$ so that it meets our requirements for an optima
 
 \subsection{Local Reject}
 \label{localreject}
-To account for differences in class structure each one now has a local reject threshold $\theta_k$. A point is rejected if
+To account for differences in class structure we define a local reject threshold $\theta_k$. A point is rejected if
 $$ r_k(\bar{x}) < \theta_k \ | \ \forall \bar{x} \  \text{where} \ f(\bar{x}) = k $$
-This gives us an N-dimensional threshold vector $\bar{\theta} = (\theta_1,...,\theta_N)$. Each $\theta_k$ regulates the reject practice only in their respective class. (TODO: example)
+This gives us an N-dimensional threshold vector $\bar{\theta} = (\theta_1,...,\theta_N)$. Each $\theta_k$ regulates the reject practice only in their respective class.
 
 \subsection{Optimal Local Reject}
 For each threshold $\theta_k$ the same criteria apply to determine if it is optimal as for a global threshold (see chapter \ref{optimalt}). With the difference that we look at each class individually. So the true and false rejects are now given by
@@ -173,7 +173,7 @@ be the set of all choices from the sets of optimal thresholds of each class. Alg
 
 \subsection{Computation by Dynamic Programming}
 \label{dp}
-Computation by brute force scales exponentially with the number of classes and is therefore not a feasible solution for large data sets with lots of classes. But our problem is equivalent to a multiple choice knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to costs, and true rejects correspond to their value (TODO:link). This allows us a faster solution that still maintains optimal results.
+Computation by brute force scales exponentially with the number of classes and is therefore not a feasible solution for large data sets with lots of classes. However our problem is equivalent to a multiple choice knapsack problem \cite{Sin:1979} where thresholds within a class correspond to items, false rejects correspond to costs, and true rejects correspond to their value. Thus a DP-Scheme is available that allows computation in polynomial time.
 Let
 
 $$
@@ -193,7 +193,7 @@ with
 	\bar{\theta}_k &= (\theta_1,...,\theta_n) \ | \ \theta_i \in \Theta_k, \ \theta_j < \theta_{j+1} \forall j \in \{1,...,n-1\} (TODO)
 \end{align}
 be the maximum number of true rejects with $n$ false rejects while considering all thresholds in classes before class $j$ and the first $i$ thresholds in class $j$. All $\bar{\theta}$ corresponding to $opt(n,N,\left|\Theta_N\right|-1) \forall n<\left|L\right|$ fulfill our criteria for an optimal threshold vector. \\
-This results in the Bellmann equation \ref{DP} to efficiently compute $opt$:
+This results in the Bellmann equation \ref{DP} \cite{Bel:1957} to efficiently compute $opt$:
 
 \begin{subnumcases}{opt(n,j,i) = \label{DP}}
 \text{if} \ n=0 : &$ \ \sum_{k=1}^{N} \left|T_{\bar{\theta}_k(0)}^k\right|$ \label{DPcase1}\\
@@ -211,17 +211,17 @@ Each case is explained as follows:
 \begin{itemize}
 \item Case \ref{DPcase1}: $n=0$ means that no false rejects are allowed so the first threshold (index 0) in each class is chosen. The resulting amount of true rejects is summed up over all classes.
 \item Case \ref{DPcase2}: $j=0$ means that no class is under consideration for a threshold. So we stay with the first threshold in each class (see above). 
-\item Case \ref{DPcase3}: $i=0$ means that no threshold is under consideration in class $j$. So we look in the previous cell with the strictest threshold possible.
+\item Case \ref{DPcase3}: $i=0$ means that no threshold is under consideration in class $j$. So we look in the previous class with the strictest threshold possible.
 \item Case \ref{DPcase4}: The chosen threshold $i$ in class $j$ exceeds the allowed amount of false rejects, so the next less strict threshold is considered.
 \item Case \ref{DPcase5}: Here the $i$th threshold in $j$ is a possible threshold but it is not clear whether it is optimal. We consider both cases. If it is not the optimal threshold, we take the next less strict one. If it is optimal, we continue our search in the previous class but with $|F_{\bar{\theta}_j(i)}^j|$ less allowed false rejects in consequence to choosing this threshold. The other consequence is that this threshold results in a number of gained true rejects compared to the least strict threshold and this gain is added.
 \end{itemize}
 
 This Bellmann equation can be computed by dynamic programming (see algorithm TODO). We use three nested loops over $n$, $j$ and $i$. This results in a processing time of $\mathbb{O}(|L| \cdot N \cdot \max_k \left|\Theta_k\right|)$. 
-Note that this equal in effort to the previous method in (TODO:ref to reject paper) but that the worst case is far less likely to occur here since it would mean that there are no clusters of classification errors. Every grouping of falsely classified points means less computation time than the previous method.
+Note that this is equal in effort to the previous method in \cite{Fis:2015} but that the worst case is far less likely to occur here since it would mean that there are no clusters of classification errors. Every grouping of falsely classified points means less computation time than the previous method.
 
 \subsection{Greedy Computation}
 \label{greedyAlg}
-Computation by dynamic programming gives us an optimal local reject option, but it still might be unfeasible in some cases since it "scales quadratically with the number of data" (TODO: quote reject paper). Hence we are looking for a greedy approximation with linear running time. For this approach we define
+Computation by dynamic programming gives us an optimal local reject option, but it still might be infeasible in some cases since it "scales quadratically with the number of data" (TODO: quote reject paper). Hence we are looking for a greedy approximation with linear running time. For this approach we define
 \begin{align}
  	\bigtriangleup T_{\bar{\theta}_k(j)}^k = T_{\bar{\theta}_k(j)}^k-T_{\bar{\theta}_k(j-1)}^k \\
 	\bigtriangleup F_{\bar{\theta}_k(j)}^k = F_{\bar{\theta}_k(j)}^k-F_{\bar{\theta}_k(j-1)}^k
@@ -241,7 +241,7 @@ as the local gain. The greedy approach lies within choosing the thresholds with 
  $T :=$ amount of true rejects for $\bar{\theta}$ \;
  \While{a more strict threshold in at least one class exists}{
  	\ForEach{$\theta_k(j) \in \bar{\theta}$}{
- 		\eIf{$\exists \theta_{i}(j+1)$}{
+ 		\eIf{$j+1<\left|\Theta_k\right|$}{
  			$g(k) = \bigtriangleup T_{\bar{\theta}_k(j+1)}^k - \bigtriangleup F_{\bar{\theta}_k(j+1)}^k$ \;
  		}{
  			$g(k) = -\infty$ \;
@@ -263,14 +263,14 @@ as the local gain. The greedy approach lies within choosing the thresholds with 
 \end{algorithm}
 
 \section{Evaluation}
-In this chapter we evaluate the described methods. We try to confirm the optimality of the dynamic programming method by comparing its result to the brute force algorithm. Furthermore we want to find out how close the greedy approach is to being optimal.
+In this chapter we evaluate the described methods. We try to confirm the optimality of the dynamic programming method by comparing its result to the brute force algorithm. Additionally we will compare the run time of both algorithms. Furthermore we want to find out how close the greedy approach is to being optimal.
 
 \subsection{Data Sets}
 For our evaluation we use randomly generated data sets. Using a normal distribution we get random samples of points divided into two classes, above and below $0$. We now introduce further normal distributions at random locations to get cluster of falsely classified points (see figure \ref{dataset}).
 
 \begin{figure}[!htbp]
 \centering
-\caption{Example of a small generated data set with one cluster of falsely classified points in each class.}
+\caption{Example of a small 2-classes generated data set with one group of falsely classified points in each class.}
 \label{dataset}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{rndDataSet}};
@@ -292,13 +292,15 @@ For our evaluation we use randomly generated data sets. Using a normal distribut
 \end{tikzpicture}
 \end{figure}
 
+To simulate multi class data sets we use multivariate normal distributions to generate random points for data sets with four classes (2D) and with eight classes (3D). The points are separated into the respective class by the coordinate axis (one quadrant corresponds to a class).
+
 \subsection{Methods}
-In regards to our definition of an optimal threshold (see chapter \ref{optimalt}) we use the true and false rejects of each threshold considered to be optimal by the respective method. To further see the behavior of the reject options we introduce a measure of quality of the classification in a second evaluation method. (TODO: ref to arc paper).
+In regards to our definition of an optimal threshold (see chapter \ref{optimalt}) we use the true and false rejects of each threshold considered to be optimal by the respective method. To further see the behavior of the reject options we introduce a measure of quality of the classification in a second evaluation method. Based on \cite{Nad:2010} we compare the ratio of accepted points to all points $ \left( \frac{\left|A_{\bar{\Theta}}\right|}{|X|}\right) $ as reject accuracy to the ratio of correctly classified points to all accepted points $ \left(\frac{\left|L \cap A_{\bar{\Theta}}\right|}{\left|A_{\bar{\Theta}}\right|}\right) $ as classification accuracy.
 
 
 \subsection{DP vs Brute Force}
 \label{DPvsBF}
-Since there is no formal proof that the Bellman equation (see chapter \ref{dp}) finds every optimal reject option we compare its result to the outcome of the brute force method. We can see in figure \ref{dpEvaPareto} that the results match for nine different generated data sets. Although this is, of course, no proof we conclude for now that the dynamic programming algorithm finds optimal thresholds.
+Since we formally did not proof that the Bellman equation (see chapter \ref{dp}) finds every optimal reject option we compare its result to the outcome of the brute force method. We can see in figure \ref{dpEvaPareto} that the results match for nine different generated data sets. Although this is, of course, no proof we conclude for now that the dynamic programming algorithm finds optimal thresholds.
 
 \begin{figure}[!htbp]
 \centering
@@ -306,6 +308,17 @@ Since there is no formal proof that the Bellman equation (see chapter \ref{dp}) 
 \label{dpEvaPareto}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{dpComp}};
+\end{tikzpicture}
+\end{figure}
+
+When comparing the running time of both methods we can see that for multiple classes (eight) we observe the expected result. The brute force method's running time grows exponentially (see figure \ref{runTime}).
+
+\begin{figure}[!htbp]
+\centering
+\caption{Here we can see the running time in seconds of the brute force (red) compared to the dynamic programming algorithm (green). A small amount of points lets the brute force method be competitive due to constant factors in the implementation. However the time increases exponentially with larger data sets.}
+\label{runTime}
+\begin{tikzpicture}
+	\node {\svg{\textwidth}{runTime}};
 \end{tikzpicture}
 \end{figure}
 
@@ -325,7 +338,7 @@ We now compare the results of the greedy strategy (see chapter \ref{greedyAlg}) 
 
 \begin{figure}[!htbp]
 \centering
-\caption{ARCs for data sets classified with optimal rejects (green curve) and with greedy rejects (red dashed curve). This supports our observation from the previous test (see figure \ref{greedyEvaPareto}).}
+\caption{ARCs for data sets classified with optimal rejects (green curve) and with greedy rejects (red dashed curve). This supports our observation from the previous test (see figure \ref{greedyEvaPareto}) in that the greedy approach can compete with the optimal solutions.}
 \label{greedyEvaARC}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{greedyARC}};
