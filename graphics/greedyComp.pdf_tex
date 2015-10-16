@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{833.65878906bp}%
+    \setlength{\unitlength}{660.05883789bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -48,37 +48,40 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.6409675)%
+  \begin{picture}(1,0.76348744)%
     \put(0,0){\includegraphics[width=\unitlength]{greedyComp.pdf}}%
-    \put(0.03396735,0.47337046){\makebox(0,0)[lb]{\smash{0}}}%
-    \put(0.02629035,0.52614985){\makebox(0,0)[lb]{\smash{50}}}%
-    \put(0.01861335,0.57892923){\makebox(0,0)[lb]{\smash{100}}}%
-    \put(0.01861335,0.63170862){\makebox(0,0)[lb]{\smash{150}}}%
-    \put(0.01093635,0.5093565){\rotatebox{90}{\makebox(0,0)[lb]{\smash{False Rejects}}}}%
-    \put(0.03396735,0.25457591){\makebox(0,0)[lb]{\smash{0}}}%
-    \put(0.02629035,0.30703545){\makebox(0,0)[lb]{\smash{50}}}%
-    \put(0.01861335,0.3594949){\makebox(0,0)[lb]{\smash{100}}}%
-    \put(0.01861335,0.41195444){\makebox(0,0)[lb]{\smash{150}}}%
-    \put(0.01093635,0.29008214){\rotatebox{90}{\makebox(0,0)[lb]{\smash{False Rejects}}}}%
-    \put(0.04340364,0.02154695){\makebox(0,0)[lb]{\smash{0}}}%
-    \put(0.12017366,0.02154695){\makebox(0,0)[lb]{\smash{20}}}%
-    \put(0.20078217,0.02154695){\makebox(0,0)[lb]{\smash{40}}}%
-    \put(0.28139069,0.02154695){\makebox(0,0)[lb]{\smash{60}}}%
-    \put(0.1336085,0.00299413){\makebox(0,0)[lb]{\smash{True Rejects}}}%
-    \put(0.03396735,0.03482173){\makebox(0,0)[lb]{\smash{0}}}%
-    \put(0.02629035,0.08760112){\makebox(0,0)[lb]{\smash{50}}}%
-    \put(0.01861335,0.14038051){\makebox(0,0)[lb]{\smash{100}}}%
-    \put(0.01861335,0.19315989){\makebox(0,0)[lb]{\smash{150}}}%
-    \put(0.01093635,0.07080777){\rotatebox{90}{\makebox(0,0)[lb]{\smash{False Rejects}}}}%
-    \put(0.38790909,0.02154695){\makebox(0,0)[lb]{\smash{0}}}%
-    \put(0.46497439,0.02154695){\makebox(0,0)[lb]{\smash{20}}}%
-    \put(0.54587818,0.02154695){\makebox(0,0)[lb]{\smash{40}}}%
-    \put(0.62678198,0.02154695){\makebox(0,0)[lb]{\smash{60}}}%
-    \put(0.47859377,0.00299413){\makebox(0,0)[lb]{\smash{True Rejects}}}%
-    \put(0.73337417,0.02154695){\makebox(0,0)[lb]{\smash{0}}}%
-    \put(0.81014419,0.02154695){\makebox(0,0)[lb]{\smash{20}}}%
-    \put(0.89075271,0.02154695){\makebox(0,0)[lb]{\smash{40}}}%
-    \put(0.97136123,0.02154695){\makebox(0,0)[lb]{\smash{60}}}%
-    \put(0.82357904,0.00299413){\makebox(0,0)[lb]{\smash{True Rejects}}}%
+    \put(0.042901,0.5518136){\makebox(0,0)[lb]{\smash{0}}}%
+    \put(0.0332049,0.61322231){\makebox(0,0)[lb]{\smash{50}}}%
+    \put(0.02350879,0.67463089){\makebox(0,0)[lb]{\smash{100}}}%
+    \put(0.02350879,0.7360396){\makebox(0,0)[lb]{\smash{150}}}%
+    \put(0.01381269,0.58938613){\rotatebox{90}{\makebox(0,0)[lb]{\smash{False Rejects}}}}%
+    \put(0.14269029,0.74967475){\makebox(0,0)[lb]{\smash{2 classes}}}%
+    \put(0.48326635,0.74967475){\makebox(0,0)[lb]{\smash{4 classes}}}%
+    \put(0.82384229,0.74967475){\makebox(0,0)[lb]{\smash{8 classes}}}%
+    \put(0.042901,0.29850285){\makebox(0,0)[lb]{\smash{0}}}%
+    \put(0.0332049,0.35950747){\makebox(0,0)[lb]{\smash{50}}}%
+    \put(0.02350879,0.42051221){\makebox(0,0)[lb]{\smash{100}}}%
+    \put(0.02350879,0.48151684){\makebox(0,0)[lb]{\smash{150}}}%
+    \put(0.01381269,0.33546937){\rotatebox{90}{\makebox(0,0)[lb]{\smash{False Rejects}}}}%
+    \put(0.05481909,0.02721394){\makebox(0,0)[lb]{\smash{0}}}%
+    \put(0.12940457,0.02721394){\makebox(0,0)[lb]{\smash{20}}}%
+    \put(0.20883797,0.02721394){\makebox(0,0)[lb]{\smash{40}}}%
+    \put(0.28827149,0.02721394){\makebox(0,0)[lb]{\smash{60}}}%
+    \put(0.13238806,0.00378161){\makebox(0,0)[lb]{\smash{True Rejects}}}%
+    \put(0.042901,0.04398008){\makebox(0,0)[lb]{\smash{0}}}%
+    \put(0.0332049,0.10498471){\makebox(0,0)[lb]{\smash{50}}}%
+    \put(0.02350879,0.16598945){\makebox(0,0)[lb]{\smash{100}}}%
+    \put(0.02350879,0.22699407){\makebox(0,0)[lb]{\smash{150}}}%
+    \put(0.01381269,0.08094661){\rotatebox{90}{\makebox(0,0)[lb]{\smash{False Rejects}}}}%
+    \put(0.39539479,0.02721394){\makebox(0,0)[lb]{\smash{0}}}%
+    \put(0.46998026,0.02721394){\makebox(0,0)[lb]{\smash{20}}}%
+    \put(0.54941367,0.02721394){\makebox(0,0)[lb]{\smash{40}}}%
+    \put(0.62884719,0.02721394){\makebox(0,0)[lb]{\smash{60}}}%
+    \put(0.47296376,0.00378161){\makebox(0,0)[lb]{\smash{True Rejects}}}%
+    \put(0.73597049,0.02721394){\makebox(0,0)[lb]{\smash{0}}}%
+    \put(0.81055596,0.02721394){\makebox(0,0)[lb]{\smash{20}}}%
+    \put(0.88998937,0.02721394){\makebox(0,0)[lb]{\smash{40}}}%
+    \put(0.96942289,0.02721394){\makebox(0,0)[lb]{\smash{60}}}%
+    \put(0.81353945,0.00378161){\makebox(0,0)[lb]{\smash{True Rejects}}}%
   \end{picture}%
 \endgroup%

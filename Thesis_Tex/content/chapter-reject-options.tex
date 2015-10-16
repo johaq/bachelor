@@ -140,7 +140,7 @@ This gives us an N-dimensional threshold vector $\bar{\theta} = (\theta_1,...,\t
 For each threshold $\theta_k$ the same criteria apply to determine if it is optimal as for a global threshold (see chapter \ref{optimalt}). With the difference that we look at each class individually. So the true and false rejects are now given by
 \begin{align} 
 T_{\theta_k}^k &= R_{\theta_k}^k \cap E_k \\ 
-F_{\theta_k}^k &= R_{\theta_k}^k \cap L_k \\
+F_{\theta_k}^k &= R_{\theta_k}^k \cap L_k, \\
 \forall \theta_k \in \Theta_k &:= \{r_k(\bar{x}_i) \ | \ \bar{x}_i \in L_k, \ \bar{x}_{i-1} \in E_k\}, \ \forall k \in \{1,...N\}
 \end{align}
 where $R_{\theta_k}^k$ is the amount of rejected points in class $k$ given the threshold $\theta_k$, $E_k$ the set of falsely classified points in class $k$ and $L_k$ the set of correctly classified points in $k$. We conclude that the threshold vector $\bar{\theta}=(\theta_1,...,\theta_N)$ is optimal if each $\theta_k$ is optimal. Conversely an optimal $\theta_k$ is not necessarily a component of an optimal vector $\bar{\theta}$.
@@ -173,7 +173,7 @@ be the set of all choices from the sets of optimal thresholds of each class. Alg
 
 \subsection{Computation by Dynamic Programming}
 \label{dp}
-Computation by brute force scales exponentially with the number of classes and is therefore not a feasible solution for large data sets with lots of clusters. But our problem is equivalent to a multiple choice knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to costs, and true rejects correspond to their value (TODO:link). This allows us a faster solution that still maintains optimal results.
+Computation by brute force scales exponentially with the number of classes and is therefore not a feasible solution for large data sets with lots of classes. But our problem is equivalent to a multiple choice knapsack problem (MCKP) where thresholds within a class correspond to items, false rejects correspond to costs, and true rejects correspond to their value (TODO:link). This allows us a faster solution that still maintains optimal results.
 Let
 
 $$
@@ -315,7 +315,7 @@ We now compare the results of the greedy strategy (see chapter \ref{greedyAlg}) 
 
 \begin{figure}[!htbp]
 \centering
-\caption{Comparison of the thresholds computed greedily (red crosses) and the optimal ones computed by dynamic programming (green circles) on randomly generated data sets. We can see that the greedy strategy is close to optimal and sometimes falls off slightly if a lot of points are rejected.}
+\caption{Comparison of the thresholds computed greedily (red crosses) and the optimal ones computed by dynamic programming (green circles) on randomly generated data sets. We can see that the greedy strategy is close to optimal and sometimes falls off slightly if a lot of points are rejected. There are no noticeable differences when the number of classes is increased.}
 \label{greedyEvaPareto}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{greedyComp}};
@@ -325,7 +325,7 @@ We now compare the results of the greedy strategy (see chapter \ref{greedyAlg}) 
 
 \begin{figure}[!htbp]
 \centering
-\caption{ARCs for data sets classified with optimal rejects (green curve) and with greedy rejects (red dashed curve).}
+\caption{ARCs for data sets classified with optimal rejects (green curve) and with greedy rejects (red dashed curve). This supports our observation from the previous test (see figure \ref{greedyEvaPareto}).}
 \label{greedyEvaARC}
 \begin{tikzpicture}
 	\node {\svg{\textwidth}{greedyARC}};
