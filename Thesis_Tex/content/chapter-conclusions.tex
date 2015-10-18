@@ -3,6 +3,6 @@
 \chapter{Conclusions}
 \label{sec:conc}
 
-Coming from our goals we set in the introduction (see chapter \ref{focus}) we managed to formulate a reject strategy that expanded on paper \cite{Fis:2015} in reducing the number of thresholds that are considered in the algorithm. The results are still optimal and can be computed in quadratic running time (see chapter \ref{DPvsBF}). With the prevalence of Big Data in mind we developed a greedy approach that approximated the reject option in linear running time thus feasible for large sets of data. Our evaluation (see chapter \ref{DPvsGR}) showed that this strategy yields near optimal results on our randomly generated data sets. 
+Coming from our goals we set in the introduction (see chapter \ref{focus}) we managed to formulate a reject strategy that expanded on paper \cite{Fis:2015} in reducing the number of thresholds that are considered in the algorithm. The results are still optimal and can be computed in quadratic running time (see chapter \ref{DPvsBF}). With the prevalence of Big Data in mind we developed a greedy approach that approximated the reject option in linear running time thus feasible for large sets of data. Our evaluation (see chapter \ref{DPvsGR}) showed that this strategy yields near optimal results on our randomly generated data sets. This also seems to be the case for data sets with larger amount of classes. \\
 
-\section{Future Works or SVM}
+This opens up for this method to be tested on different types of classification, e.g. a one-vs-all SVM or prototypebased classifiers like LVQ. For each method different measures of confidence have to be evaluated to see which one yields the best results. Furthermore the behaviour on real and benchmark data sets can be explored.
